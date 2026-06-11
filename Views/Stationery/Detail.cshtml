@@ -1,0 +1,121 @@
+@model StationeryDetailViewModel
+
+@{
+    ViewData["Title"] = "Stationery Detail";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Stationery Detail</h2>
+
+        <p class="page-description">
+            Thông tin chi tiết của sản phẩm văn phòng phẩm.
+        </p>
+    </div>
+
+    <a class="btn btn-light" href="/Stationery">
+        Quay lại danh sách
+    </a>
+</div>
+
+<div class="detail-layout">
+    <div>
+        <table class="table table-bordered">
+            <tr>
+                <th>ID</th>
+                <td>@Model.Id</td>
+            </tr>
+
+            <tr>
+                <th>Mã sản phẩm</th>
+                <td>@Model.Code</td>
+            </tr>
+
+            <tr>
+                <th>Tên sản phẩm</th>
+                <td>@Model.Name</td>
+            </tr>
+
+            <tr>
+                <th>Danh mục</th>
+                <td>@Model.Category</td>
+            </tr>
+
+            <tr>
+                <th>Thương hiệu</th>
+                <td>@Model.Brand</td>
+            </tr>
+
+            <tr>
+                <th>Giá bán</th>
+                <td>@Model.PriceText</td>
+            </tr>
+
+            <tr>
+                <th>Số lượng tồn kho</th>
+                <td>@Model.StockQuantity</td>
+            </tr>
+
+            <tr>
+                <th>Mức tồn tối thiểu</th>
+                <td>@Model.MinStock</td>
+            </tr>
+
+            <tr>
+                <th>Giá trị tồn kho</th>
+                <td>@Model.InventoryValueText</td>
+            </tr>
+
+            <tr>
+                <th>Trạng thái</th>
+                <td>@Model.StockStatus</td>
+            </tr>
+
+            <tr>
+                <th>Mô tả sản phẩm</th>
+                <td>@Model.Description</td>
+            </tr>
+
+            <tr>
+                <th>Gợi ý nhập thêm</th>
+                <td>@Model.RestockSuggestion</td>
+            </tr>
+
+            <tr>
+                <th>Cập nhật lần cuối</th>
+                <td>@Model.LastUpdatedText</td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <div class="side-card warning">
+            <h4>Trạng thái tồn kho</h4>
+
+            <h3>@Model.StockStatus</h3>
+
+            <p>@Model.RestockSuggestion</p>
+        </div>
+
+        <div class="side-card info">
+            <h4>Giá trị tồn kho hiện tại</h4>
+
+            <h3>@Model.InventoryValueText</h3>
+
+            <p>
+                Giá trị được tính dựa trên giá bán
+                và số lượng tồn kho hiện có.
+            </p>
+        </div>
+
+        <div class="side-card success">
+            <h4>Cập nhật lần cuối</h4>
+
+            <h3>@Model.LastUpdatedText</h3>
+
+            <p>
+                Thông tin sản phẩm được cập nhật gần nhất.
+            </p>
+        </div>
+    </div>
+</div>

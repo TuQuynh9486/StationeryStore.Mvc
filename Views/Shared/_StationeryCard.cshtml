@@ -1,0 +1,59 @@
+@model StationeryListItemViewModel
+
+<div class="product-card">
+
+    <img src="@Model.ImageUrl"
+         alt="@Model.Name"
+         class="product-image" />
+
+    <h3>@Model.Name</h3>
+
+    <p class="product-meta">
+        Mã sản phẩm: @Model.Code
+    </p>
+
+    <p class="product-meta">
+        Danh mục: @Model.Category
+    </p>
+
+    <p class="product-meta">
+        Thương hiệu: @Model.Brand
+    </p>
+
+    <p class="product-price">
+        @Model.PriceText
+    </p>
+
+    <p>
+        Số lượng tồn kho:
+        <strong>@Model.StockQuantity</strong>
+    </p>
+
+    @if (Model.StockStatus == "Còn hàng")
+    {
+        <span class="badge badge-success">
+            @Model.StockStatus
+        </span>
+    }
+    else if (Model.StockStatus == "Sắp hết hàng")
+    {
+        <span class="badge badge-warning">
+            @Model.StockStatus
+        </span>
+    }
+    else
+    {
+        <span class="badge badge-danger">
+            @Model.StockStatus
+        </span>
+    }
+
+    <div class="card-actions">
+        <a class="btn btn-light"
+           asp-controller="Stationery"
+           asp-action="Detail"
+           asp-route-id="@Model.Id">
+            Xem chi tiết
+        </a>
+    </div>
+</div>

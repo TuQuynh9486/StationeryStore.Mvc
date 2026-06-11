@@ -1,0 +1,161 @@
+@model StationerySearchViewModel
+
+@{
+    ViewData["Title"] = "Search Stationery";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">
+            Search Stationery
+        </h2>
+
+        <p class="page-description">
+            Form GET dùng Query String để tìm kiếm
+            sản phẩm văn phòng phẩm theo từ khóa,
+            danh mục và khoảng giá.
+        </p>
+    </div>
+
+    <a class="btn btn-light"
+       asp-controller="Stationery"
+       asp-action="Index">
+        Quay lại danh sách
+    </a>
+</div>
+
+<div class="form-layout">
+
+    <form class="form-box"
+          asp-controller="Stationery"
+          asp-action="Search"
+          method="get">
+
+        <div class="form-group">
+            <label asp-for="Keyword">
+                Từ khóa
+            </label>
+
+            <input asp-for="Keyword"
+                   class="form-control"
+                   placeholder="Ví dụ: bút, sổ tay, gôm tẩy" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Category">
+                Danh mục
+            </label>
+
+            <input asp-for="Category"
+                   class="form-control"
+                   placeholder="Ví dụ: Bút, Sổ tay" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MinPrice">
+                Giá tối thiểu
+            </label>
+
+            <input asp-for="MinPrice"
+                   class="form-control"
+                   placeholder="Ví dụ: 10000" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MaxPrice">
+                Giá tối đa
+            </label>
+
+            <input asp-for="MaxPrice"
+                   class="form-control"
+                   placeholder="Ví dụ: 50000" />
+        </div>
+
+        <button class="btn"
+                type="submit">
+            Search
+        </button>
+
+        <a class="btn btn-secondary"
+           asp-controller="Stationery"
+           asp-action="Search">
+            Reset
+        </a>
+    </form>
+
+    <div>
+        <h3>Search Result</h3>
+
+        <p>
+            Keyword:
+            <strong>@Model.Keyword</strong>
+        </p>
+
+        <p>
+            Category:
+            <strong>@Model.Category</strong>
+        </p>
+
+        <p>
+            Min Price:
+            <strong>@Model.MinPrice</strong>
+        </p>
+
+        <p>
+            Max Price:
+            <strong>@Model.MaxPrice</strong>
+        </p>
+
+        @if (Model.Products.Count == 0)
+        {
+            <p>
+                Không tìm thấy sản phẩm phù hợp.
+            </p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Thương hiệu</th>
+                        <th>Giá bán</th>
+                        <th>Tồn kho</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+
+                            <td>@item.Category</td>
+
+                            <td>@item.Brand</td>
+
+                            <td>@item.PriceText</td>
+
+                            <td>@item.StockQuantity</td>
+
+                            <td>
+                                @item.StockStatus
+                            </td>
+
+                            <td>
+                                <a asp-controller="Stationery"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id">
+                                    Xem
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

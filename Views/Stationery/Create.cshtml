@@ -1,0 +1,207 @@
+@model StationeryCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Stationery";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">
+            Create Stationery
+        </h2>
+
+        <p class="page-description">
+            Form POST dùng asp-for để bind dữ liệu
+            vào StationeryCreateViewModel.
+        </p>
+    </div>
+
+    <a class="btn btn-light"
+       asp-controller="Stationery"
+       asp-action="Index">
+        Quay lại danh sách
+    </a>
+</div>
+
+<div class="form-layout">
+
+    <form class="form-box"
+          asp-controller="Stationery"
+          asp-action="Create"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All"></div>
+
+        <div class="form-group">
+            <label asp-for="Code">
+                Mã sản phẩm
+            </label>
+
+            <input asp-for="Code"
+                   class="form-control"
+                   placeholder="Ví dụ: PEN-001" />
+
+            <span asp-validation-for="Code"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name">
+                Tên sản phẩm
+            </label>
+
+            <input asp-for="Name"
+                   class="form-control"
+                   placeholder="Ví dụ: Bút bi Thiên Long" />
+
+            <span asp-validation-for="Name"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Category">
+                Danh mục
+            </label>
+
+            <input asp-for="Category"
+                   class="form-control"
+                   placeholder="Ví dụ: Bút, Sổ tay" />
+
+            <span asp-validation-for="Category"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Brand">
+                Thương hiệu
+            </label>
+
+            <input asp-for="Brand"
+                   class="form-control"
+                   placeholder="Ví dụ: Thiên Long" />
+
+            <span asp-validation-for="Brand"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price">
+                Giá bán
+            </label>
+
+            <input asp-for="Price"
+                   class="form-control"
+                   placeholder="Ví dụ: 10000" />
+
+            <span asp-validation-for="Price"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="StockQuantity">
+                Số lượng tồn kho
+            </label>
+
+            <input asp-for="StockQuantity"
+                   class="form-control"
+                   placeholder="Ví dụ: 50" />
+
+            <span asp-validation-for="StockQuantity"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MinStock">
+                Mức tồn tối thiểu
+            </label>
+
+            <input asp-for="MinStock"
+                   class="form-control"
+                   placeholder="Ví dụ: 10" />
+
+            <span asp-validation-for="MinStock"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl">
+                Hình ảnh sản phẩm
+            </label>
+
+            <input asp-for="ImageUrl"
+                   class="form-control"
+                   placeholder="Ví dụ: /images/pen.jpg" />
+
+            <span asp-validation-for="ImageUrl"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">
+                Mô tả sản phẩm
+            </label>
+
+            <textarea asp-for="Description"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Nhập mô tả sản phẩm">
+            </textarea>
+
+            <span asp-validation-for="Description"
+                  class="text-danger">
+            </span>
+        </div>
+
+        <button class="btn"
+                type="submit">
+            Save
+        </button>
+
+        <a class="btn btn-secondary"
+           asp-controller="Stationery"
+           asp-action="Index">
+            Back to List
+        </a>
+    </form>
+
+<div class="info-box">
+
+    <h3>Quản lý sản phẩm văn phòng phẩm</h3>
+
+    <p>
+        Form này cho phép người quản lý thêm mới
+        các sản phẩm văn phòng phẩm vào hệ thống
+        để theo dõi danh mục và tình trạng tồn kho.
+    </p>
+
+    <p>
+        Sau khi lưu, sản phẩm sẽ được hiển thị
+        trong danh sách quản lý cùng với thông tin như:
+        giá bán, số lượng tồn kho và trạng thái sản phẩm.
+    </p>
+
+    <p>
+        Hệ thống cũng hỗ trợ kiểm tra các sản phẩm
+        sắp hết hàng hoặc đã hết hàng để cửa hàng
+        có kế hoạch nhập thêm kịp thời.
+    </p>
+
+</div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+}

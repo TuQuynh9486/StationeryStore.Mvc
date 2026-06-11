@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="hero-section">
+
+    <div class="hero-content">
+
+        <h1>
+            Mini Stationery Store Catalog MVC
+        </h1>
+
+        <p>
+            Website quản lý và hiển thị danh mục văn phòng phẩm
+            được xây dựng bằng ASP.NET Core MVC.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a class="btn"
+               asp-controller="Stationery"
+               asp-action="Index">
+                Stationery
+            </a>
+
+            <a class="btn btn-light"
+               asp-controller="Stationery"
+               asp-action="Stats">
+                Inventory Stats
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="feature-grid">
+
+    <div class="feature-card">
+        <h3>Danh mục sản phẩm</h3>
+
+        <p>
+            Hiển thị đầy đủ các sản phẩm văn phòng phẩm
+            với hình ảnh và thông tin chi tiết.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <h3>Tìm kiếm sản phẩm</h3>
+
+        <p>
+            Hỗ trợ tìm kiếm nhanh sản phẩm
+            theo tên hoặc danh mục.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <h3>Thống kê tồn kho</h3>
+
+        <p>
+            Theo dõi số lượng sản phẩm,
+            tình trạng còn hàng và sắp hết hàng.
+        </p>
+    </div>
+
+</div>
