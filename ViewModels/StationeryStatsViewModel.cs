@@ -12,5 +12,7 @@ public class StationeryStatsViewModel
 
     public int LowStockCount { get; set; }
 
+    public int LowStockThreshold { get; set; }
+
     public string TotalInventoryValueText => $"{TotalInventoryValue:N0} VND";
 }

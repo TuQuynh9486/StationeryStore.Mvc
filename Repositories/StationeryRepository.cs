@@ -53,18 +53,60 @@ public class StationeryRepository : IStationeryRepository
     public async Task AddAsync(StationeryItem item)
     {
         await _context.StationeryItems.AddAsync(item);
-        await _context.SaveChangesAsync();
+    }
+
+    // =========================
+    // SEARCH ITEM
+    // =========================
+
+    public async Task<List<StationeryItem>> SearchAsync(
+    int? categoryId,
+    decimal? minPrice,
+    decimal? maxPrice,
+    string? keyword)
+    {
+        var query = _context.StationeryItems
+            .AsNoTracking()
+            .Include(x => x.Category)
+            .Include(x => x.Supplier)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(keyword))
+        {
+            query = query.Where(x =>
+                x.Name.Contains(keyword) ||
+                x.Code.Contains(keyword));
+        }
+
+        if (categoryId.HasValue)
+        {
+            query = query.Where(x =>
+                x.CategoryId == categoryId.Value);
+        }
+
+        if (minPrice.HasValue)
+        {
+            query = query.Where(x =>
+                x.Price >= minPrice.Value);
+        }
+
+        if (maxPrice.HasValue)
+        {
+            query = query.Where(x =>
+                x.Price <= maxPrice.Value);
+        }
+
+        return await query.ToListAsync();
     }
 
     // =========================
     // UPDATE ITEM
     // =========================
-    public async Task UpdateAsync(StationeryItem item)
+    public Task UpdateAsync(StationeryItem item)
     {
         _context.StationeryItems.Update(item);
-        await _context.SaveChangesAsync();
+        return Task.CompletedTask;
     }
-
     // =========================
     // DELETE ITEM
     // =========================
@@ -75,12 +117,11 @@ public class StationeryRepository : IStationeryRepository
         if (item != null)
         {
             _context.StationeryItems.Remove(item);
-            await _context.SaveChangesAsync();
         }
     }
 
     // =========================
-    // SAVE CHANGES (OPTIONAL - nếu dùng Unit of Work style)
+    // SAVE CHANGES 
     // =========================
     public async Task SaveChangesAsync()
     {

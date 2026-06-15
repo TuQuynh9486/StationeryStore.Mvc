@@ -8,4 +8,7 @@ public interface ICategoryService
     Task<List<Category>> GetCategoriesAsync();
 
     Task<CategoryDetailViewModel?> GetDetailAsync(int id);
+
+    Task<List<CategoryListItemViewModel>>
+    GetCategoryListAsync();
 }

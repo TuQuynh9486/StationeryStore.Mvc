@@ -9,10 +9,14 @@ public class StationeryController : Controller
 {
     private readonly IStationeryService _stationeryService;
 
+    private readonly ICategoryService _categoryService;
+
     public StationeryController(
-        IStationeryService stationeryService)
+    IStationeryService stationeryService,
+    ICategoryService categoryService)
     {
         _stationeryService = stationeryService;
+        _categoryService = categoryService;
     }
 
     public async Task<IActionResult> Index()
@@ -45,15 +49,17 @@ public class StationeryController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search(StationerySearchViewModel model)
+    public async Task<IActionResult> Search(
+       StationerySearchViewModel model)
     {
-        var result = await _stationeryService.SearchAsync(model);
+        model.Products =
+            await _stationeryService.SearchAsync(model);
 
-        model.Products = result;
+        model.Categories =
+           await _categoryService.GetCategoryListAsync();
 
         return View(model);
     }
-
     [HttpGet]
     public async Task<IActionResult> Stats()
     {

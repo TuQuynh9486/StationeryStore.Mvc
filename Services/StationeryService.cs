@@ -86,49 +86,30 @@ public class StationeryService : IStationeryService
     // =========================
     // SEARCH
     // =========================
-    public async Task<List<StationeryListItemViewModel>> SearchAsync(StationerySearchViewModel model)
+    public async Task<List<StationeryListItemViewModel>> SearchAsync(
+        StationerySearchViewModel model)
     {
-        var items = await _stationeryRepository.GetAllReadOnlyAsync();
+        var items =
+            await _stationeryRepository.SearchAsync(
+                model.CategoryId,
+                model.MinPrice,
+                model.MaxPrice,
+                model.Keyword);
 
-        var query = items.AsQueryable();
-
-        if (!string.IsNullOrEmpty(model.Keyword))
-        {
-            query = query.Where(x =>
-                x.Name.Contains(model.Keyword) ||
-                x.Code.Contains(model.Keyword));
-        }
-
-        if (!string.IsNullOrEmpty(model.Category))
-        {
-            query = query.Where(x =>
-                x.Category != null &&
-                x.Category.Name == model.Category);
-        }
-
-        if (model.MinPrice.HasValue)
-        {
-            query = query.Where(x => x.Price >= model.MinPrice.Value);
-        }
-
-        if (model.MaxPrice.HasValue)
-        {
-            query = query.Where(x => x.Price <= model.MaxPrice.Value);
-        }
-
-        return query.Select(item => new StationeryListItemViewModel
-        {
-            Id = item.Id,
-            Code = item.Code,
-            Name = item.Name,
-            Category = item.Category != null ? item.Category.Name : "N/A",
-            Price = item.Price,
-            StockQuantity = item.StockQuantity,
-            MinStock = item.MinStock,
-            ImageUrl = item.ImageUrl
-        }).ToList();
+        return items.Select(item =>
+            new StationeryListItemViewModel
+            {
+                Id = item.Id,
+                Code = item.Code,
+                Name = item.Name,
+                Category = item.Category?.Name ?? "",
+                Brand = item.Brand,
+                Price = item.Price,
+                StockQuantity = item.StockQuantity,
+                MinStock = item.MinStock,
+                ImageUrl = item.ImageUrl
+            }).ToList();
     }
-
     public async Task<StationeryStatsViewModel> GetStatsAsync()
     {
         var items = await _stationeryRepository.GetAllReadOnlyAsync();
@@ -149,7 +130,7 @@ public class StationeryService : IStationeryService
             LowStockCount =
                 items.Count(x =>
                     x.StockQuantity > 0 &&
-                    x.StockQuantity <= x.MinStock)
+                    x.StockQuantity <= _settings.LowStockThreshold)
         };
     }
 

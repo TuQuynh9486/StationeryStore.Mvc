@@ -134,3 +134,4 @@ C:\Users\user\OneDrive - VNU-HCMUS\Desktop\API_ASPNET\StationeryStore.Mvc\bin\De
 C:\Users\user\OneDrive - VNU-HCMUS\Desktop\API_ASPNET\StationeryStore.Mvc\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\user\OneDrive - VNU-HCMUS\Desktop\API_ASPNET\StationeryStore.Mvc\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\user\OneDrive - VNU-HCMUS\Desktop\API_ASPNET\StationeryStore.Mvc\obj\Debug\net8.0\Statione.B1A97F29.Up2Date
+C:\Users\user\OneDrive - VNU-HCMUS\Desktop\API_ASPNET\StationeryStore.Mvc\obj\Debug\net8.0\StationeryStore.Mvc.sourcelink.json

@@ -10,6 +10,12 @@ public interface IStationeryRepository
 
     Task<StationeryItem?> GetByIdAsync(int id);
 
+    Task<List<StationeryItem>> SearchAsync(
+        int? categoryId,
+        decimal? minPrice,
+        decimal? maxPrice,
+        string? keyword);
+
     Task AddAsync(StationeryItem item);
 
     Task SaveChangesAsync();

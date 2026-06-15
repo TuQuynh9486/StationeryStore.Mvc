@@ -48,4 +48,18 @@ public class CategoryService : ICategoryService
             .ToList()
         };
     }
+
+    public async Task<List<CategoryListItemViewModel>>
+    GetCategoryListAsync()
+    {
+        var categories =
+            await _repository.GetAllAsync();
+
+        return categories.Select(c =>
+            new CategoryListItemViewModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+    }
 }

@@ -17,38 +17,38 @@
         </p>
     </div>
 
-    <a class="btn btn-light"
-       asp-controller="Stationery"
-       asp-action="Index">
+    <a class="btn btn-light" asp-controller="Stationery" asp-action="Index">
         Quay lại danh sách
     </a>
 </div>
 
 <div class="form-layout">
 
-    <form class="form-box"
-          asp-controller="Stationery"
-          asp-action="Search"
-          method="get">
+    <form class="form-box" asp-controller="Stationery" asp-action="Search" method="get">
 
         <div class="form-group">
             <label asp-for="Keyword">
                 Từ khóa
             </label>
 
-            <input asp-for="Keyword"
-                   class="form-control"
-                   placeholder="Ví dụ: bút, sổ tay, gôm tẩy" />
+            <input asp-for="Keyword" class="form-control" placeholder="Ví dụ: bút, sổ tay, gôm tẩy" />
         </div>
 
         <div class="form-group">
-            <label asp-for="Category">
+            <label asp-for="CategoryId">
                 Danh mục
             </label>
 
-            <input asp-for="Category"
-                   class="form-control"
-                   placeholder="Ví dụ: Bút, Sổ tay" />
+            <select asp-for="CategoryId" class="form-control">
+                <option value="">-- Tất cả danh mục --</option>
+
+                @foreach (var c in Model.Categories)
+                {
+                    <option value="@c.Id">
+                        @c.Name
+                    </option>
+                }
+            </select>
         </div>
 
         <div class="form-group">
@@ -56,9 +56,7 @@
                 Giá tối thiểu
             </label>
 
-            <input asp-for="MinPrice"
-                   class="form-control"
-                   placeholder="Ví dụ: 10000" />
+            <input asp-for="MinPrice" class="form-control" placeholder="Ví dụ: 10000" />
         </div>
 
         <div class="form-group">
@@ -66,19 +64,14 @@
                 Giá tối đa
             </label>
 
-            <input asp-for="MaxPrice"
-                   class="form-control"
-                   placeholder="Ví dụ: 50000" />
+            <input asp-for="MaxPrice" class="form-control" placeholder="Ví dụ: 50000" />
         </div>
 
-        <button class="btn"
-                type="submit">
+        <button class="btn" type="submit">
             Search
         </button>
 
-        <a class="btn btn-secondary"
-           asp-controller="Stationery"
-           asp-action="Search">
+        <a class="btn btn-secondary" asp-controller="Stationery" asp-action="Search">
             Reset
         </a>
     </form>
@@ -92,8 +85,8 @@
         </p>
 
         <p>
-            Category:
-            <strong>@Model.Category</strong>
+            Category Id:
+            <strong>@Model.CategoryId?.ToString() ?? "All")</strong>
         </p>
 
         <p>
@@ -146,9 +139,7 @@
                             </td>
 
                             <td>
-                                <a asp-controller="Stationery"
-                                   asp-action="Detail"
-                                   asp-route-id="@item.Id">
+                                <a asp-controller="Stationery" asp-action="Detail" asp-route-id="@item.Id">
                                     Xem
                                 </a>
                             </td>
