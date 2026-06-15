@@ -1,0 +1,28 @@
+@model List<SupplierListItemViewModel>
+
+<h2>Suppliers</h2>
+
+<a asp-action="Create">
+    Create Supplier
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Products</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Phone</td>
+                <td>@item.ProductCount</td>
+            </tr>
+        }
+    </tbody>
+</table>

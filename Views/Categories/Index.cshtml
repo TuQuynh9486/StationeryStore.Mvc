@@ -1,0 +1,50 @@
+@model List<StationeryStore.Mvc.Models.Category>
+
+<h2>Category & Product Relationship</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Category</th>
+            <th>Products</th>
+            <th>Relationship</th>
+            <th>DbSet</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <!-- Category -->
+                <td>@c.Name</td>
+
+                <!-- Products -->
+                <td>
+                    @if (c.StationeryItems != null && c.StationeryItems.Any())
+                    {
+                        @string.Join(", ", c.StationeryItems.Select(p => p.Name))
+                    }
+                    else
+                    {
+                        <span>No products</span>
+                    }
+                </td>
+
+                <!-- Relationship -->
+                <td>1 - Many</td>
+
+                <!-- DbSet -->
+                <td>Categories</td>
+
+                <!-- Action -->
+                <td>
+                    <a asp-controller="Categories" asp-action="Detail" asp-route-id="@c.Id" class="btn btn-info">
+                        View
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

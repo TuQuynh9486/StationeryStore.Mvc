@@ -1,0 +1,86 @@
+@model CategoryDetailViewModel
+
+@{
+ViewData["Title"] = "Category Detail";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">
+            Category Detail
+        </h2>
+
+    <p class="page-description">
+        Thông tin chi tiết danh mục sản phẩm.
+    </p>
+</div>
+
+<a asp-controller="Categories"
+   asp-action="Index"
+   class="btn btn-secondary">
+    Back
+</a>
+
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+
+    <h4>@Model.Name</h4>
+
+    <p>
+        Category ID:
+        <strong>@Model.Id</strong>
+    </p>
+
+    <p>
+        Total Products:
+        <strong>@Model.Products.Count</strong>
+    </p>
+
+    <p>
+        Relationship:
+        <strong>Category (1) → Stationery Items (Many)</strong>
+    </p>
+
+</div>
+
+</div>
+
+<h4>Products In This Category</h4>
+
+@if (Model.Products.Any())
+{ <table class="table table-bordered table-striped">
+
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Price</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    @foreach (var item in Model.Products)
+    {
+        <tr>
+            <td>@item.Code</td>
+            <td>@item.Name</td>
+            <td>@item.Brand</td>
+            <td>@item.PriceText</td>
+            <td>@item.StockQuantity</td>
+        </tr>
+    }
+
+    </tbody>
+
+</table>
+
+}
+else
+{ <div class="alert alert-warning">
+No products found in this category. </div>
+}

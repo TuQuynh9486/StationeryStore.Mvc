@@ -1,18 +1,15 @@
 ﻿<!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="utf-8" />
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>
         @ViewData["Title"] - StationeryStore.Mvc
     </title>
 
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
 <body>
@@ -20,45 +17,63 @@
         <div class="container header-content">
 
             <div class="brand">
-                <a asp-controller="Home"
-                   asp-action="Index">
+                <a asp-controller="Home" asp-action="Index">
                     Stationery Store MVC
                 </a>
             </div>
 
             <nav class="main-nav">
 
-                <a asp-controller="Home"
-                   asp-action="Index">
+                <a asp-controller="Home" asp-action="Index">
                     Home
                 </a>
 
-                <a asp-controller="Stationery"
-                   asp-action="Index">
-                    Stationery
+                <a asp-controller="Stationery" asp-action="Index">
+                    Products
                 </a>
 
-                <a asp-controller="Stationery"
-                   asp-action="Stats">
-                    Inventory Stats
+                <a asp-controller="Categories" asp-action="Index">
+                    Categories
                 </a>
 
-                <a asp-controller="Stationery"
-                   asp-action="Search">
+                <a asp-controller="Suppliers" asp-action="Index">
+                    Suppliers
+                </a>
+
+                @*
+
+                <a asp-controller="Stationery" asp-action="Search">
                     Search
                 </a>
 
-                <a asp-controller="Stationery"
-                   asp-action="Create">
-                    Create
+                <a asp-controller="Stationery" asp-action="Create">
+                    Create Product
                 </a>
 
-                <a asp-controller="Home"
-                   asp-action="Privacy">
+                <a asp-controller="Stationery" asp-action="Stats">
+                    Inventory Stats
+                </a>
+                *@
+
+                <!-- THÊM MỚI -->
+                <a asp-controller="Inventory" asp-action="Create">
+                    Inventory Transaction
+                </a>
+
+                <a asp-controller="Health" asp-action="Index">
+                    Data Health
+                </a>
+
+                @*
+
+                <a asp-controller="Home" asp-action="Privacy">
                     Privacy
                 </a>
+                *@
+
 
             </nav>
+
         </div>
     </header>
 
@@ -73,8 +88,7 @@
                 &copy; 2026 - StationeryStore.Mvc
             </span>
 
-            <a asp-controller="Home"
-               asp-action="Privacy">
+            <a asp-controller="Home" asp-action="Privacy">
                 Privacy Policy
             </a>
 
@@ -84,4 +98,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
+
 </html>

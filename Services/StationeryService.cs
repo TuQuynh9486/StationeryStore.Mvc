@@ -1,224 +1,156 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using StationeryStore.Mvc.Data;
 using StationeryStore.Mvc.Models;
+using StationeryStore.Mvc.Options;
+using StationeryStore.Mvc.Repositories;
 using StationeryStore.Mvc.ViewModels;
 
 namespace StationeryStore.Mvc.Services;
 
-public class StationeryService
+public class StationeryService : IStationeryService
 {
-    private readonly List<StationeryItem> _items = new()
+    private readonly IStationeryRepository _stationeryRepository;
+    private readonly StoreSettings _settings;
+    private readonly StationeryDbContext _context;
+
+    public StationeryService(
+        IStationeryRepository stationeryRepository,
+        IOptions<StoreSettings> options,
+        StationeryDbContext context)
     {
-        new StationeryItem
-        {
-            Id = 1,
-            Code = "PEN-001",
-            Name = "Bút bi Thiên Long",
-            Category = "Bút",
-            Brand = "Thiên Long",
-            Price = 10000,
-            StockQuantity = 50,
-            MinStock = 10,
-            ImageUrl = "/images/pen.jpg",
-            Description = "Bút bi mực xanh viết mượt, phù hợp cho học sinh và nhân viên văn phòng.",
-            LastUpdatedAt = new DateTime(2026, 5, 22, 19, 12, 0)
-        },
-
-        new StationeryItem
-        {
-            Id = 2,
-            Code = "NOTE-002",
-            Name = "Sổ tay A5",
-            Category = "Sổ tay",
-            Brand = "Hồng Hà",
-            Price = 35000,
-            StockQuantity = 8,
-            MinStock = 10,
-            ImageUrl = "/images/notebook.jpg",
-            Description = "Sổ tay bìa cứng khổ A5 tiện lợi cho ghi chú hằng ngày.",
-            LastUpdatedAt = new DateTime(2026, 5, 22, 19, 12, 0)
-        },
-
-        new StationeryItem
-        {
-            Id = 3,
-            Code = "BOOK-003",
-            Name = "Tập học sinh 200 trang",
-            Category = "Tập vở",
-            Brand = "Campus",
-            Price = 22000,
-            StockQuantity = 0,
-            MinStock = 15,
-            ImageUrl = "/images/notebook200.jpg",
-            Description = "Tập học sinh giấy trắng đẹp, chống lem mực.",
-            LastUpdatedAt = new DateTime(2026, 5, 22, 19, 12, 0)
-        },
-
-        new StationeryItem
-        {
-            Id = 4,
-            Code = "RUL-004",
-            Name = "Thước kẻ 30cm",
-            Category = "Thước",
-            Brand = "FlexOffice",
-            Price = 12000,
-            StockQuantity = 20,
-            MinStock = 5,
-            ImageUrl = "/images/ruler.jpg",
-            Description = "Thước nhựa trong suốt, độ bền cao.",
-            LastUpdatedAt = new DateTime(2026, 5, 22, 19, 12, 0)
-        },
-
-        new StationeryItem
-        {
-            Id = 5,
-            Code = "ERS-005",
-            Name = "Gôm tẩy học sinh",
-            Category = "Gôm tẩy",
-            Brand = "Pentel",
-            Price = 8000,
-            StockQuantity = 3,
-            MinStock = 10,
-            ImageUrl = "/images/eraser.jpg",
-            Description = "Gôm tẩy mềm, sạch và không làm rách giấy.",
-            LastUpdatedAt = new DateTime(2026, 5, 22, 19, 12, 0)
-        },
-
-        new StationeryItem
-        {
-            Id = 6,
-            Code = "BOX-006",
-            Name = "Hộp bút vải",
-            Category = "Hộp bút",
-            Brand = "Deli",
-            Price = 55000,
-            StockQuantity = 12,
-            MinStock = 5,
-            ImageUrl = "/images/pencilbox.jpg",
-            Description = "Hộp bút nhiều ngăn tiện dụng cho học sinh.",
-            LastUpdatedAt = new DateTime(2026, 5, 22, 19, 12, 0)
-        }
-    };
-
-    public List<StationeryItem> GetAll()
-    {
-        return _items;
+        _stationeryRepository = stationeryRepository;
+        _settings = options.Value;
+        _context = context;
     }
 
-    public StationeryItem? GetById(int id)
+    // =========================
+    // GET ALL (INDEX)
+    // =========================
+    public async Task<List<StationeryListItemViewModel>> GetStationeryListAsync()
     {
-        return _items.FirstOrDefault(item => item.Id == id);
+        var items = await _stationeryRepository.GetAllReadOnlyAsync();
+
+        return items.Select(item => new StationeryListItemViewModel
+        {
+            Id = item.Id,
+            Code = item.Code,
+            Name = item.Name,
+            Category = item.Category != null ? item.Category.Name : "Chưa phân loại",
+            Brand = item.Brand,
+            Price = item.Price,
+            StockQuantity = item.StockQuantity,
+            MinStock = item.MinStock,
+            ImageUrl = item.ImageUrl
+        }).ToList();
     }
 
-    public List<StationeryItem> Search(
-        string? keyword,
-        decimal? minPrice,
-        decimal? maxPrice,
-        string? category)
+    // =========================
+    // CREATE (WITH TRANSACTION)
+    // =========================
+    public async Task CreateAsync(StationeryCreateViewModel model)
     {
-        var query = _items.AsEnumerable();
+        using var transaction = await _context.Database.BeginTransactionAsync();
 
-        if (!string.IsNullOrWhiteSpace(keyword))
+        try
         {
-            query = query.Where(item =>
-                item.Name.Contains(keyword,
-                    StringComparison.OrdinalIgnoreCase) ||
+            var entity = new StationeryItem
+            {
+                Code = model.Code,
+                Name = model.Name,
+                Brand = model.Brand,
+                Price = model.Price,
+                StockQuantity = model.StockQuantity,
+                MinStock = model.MinStock,
+                ImageUrl = model.ImageUrl,
+                Description = model.Description,
+                CategoryId = model.CategoryId,
+                SupplierId = model.SupplierId
+            };
 
-                item.Category.Contains(keyword,
-                    StringComparison.OrdinalIgnoreCase) ||
+            await _stationeryRepository.AddAsync(entity);
 
-                item.Brand.Contains(keyword,
-                    StringComparison.OrdinalIgnoreCase) ||
+            entity.StockQuantity = entity.StockQuantity - 0;
 
-                item.Code.Contains(keyword,
-                    StringComparison.OrdinalIgnoreCase));
+            await _stationeryRepository.SaveChangesAsync();
+
+            await transaction.CommitAsync();
         }
-
-        if (!string.IsNullOrWhiteSpace(category))
+        catch
         {
-            query = query.Where(item =>
-                item.Category.Equals(category,
-                    StringComparison.OrdinalIgnoreCase));
+            await transaction.RollbackAsync();
+            throw;
         }
-
-        if (minPrice.HasValue)
-        {
-            query = query.Where(item =>
-                item.Price >= minPrice.Value);
-        }
-
-        if (maxPrice.HasValue)
-        {
-            query = query.Where(item =>
-                item.Price <= maxPrice.Value);
-        }
-
-        return query.ToList();
     }
 
-    public StationeryItem Create(
-        StationeryCreateViewModel model)
+    // =========================
+    // SEARCH
+    // =========================
+    public async Task<List<StationeryListItemViewModel>> SearchAsync(StationerySearchViewModel model)
     {
-        var newId = _items.Count == 0
-            ? 1
-            : _items.Max(item => item.Id) + 1;
+        var items = await _stationeryRepository.GetAllReadOnlyAsync();
 
-        var item = new StationeryItem
+        var query = items.AsQueryable();
+
+        if (!string.IsNullOrEmpty(model.Keyword))
         {
-            Id = newId,
+            query = query.Where(x =>
+                x.Name.Contains(model.Keyword) ||
+                x.Code.Contains(model.Keyword));
+        }
 
-            Code = model.Code,
+        if (!string.IsNullOrEmpty(model.Category))
+        {
+            query = query.Where(x =>
+                x.Category != null &&
+                x.Category.Name == model.Category);
+        }
 
-            Name = model.Name,
+        if (model.MinPrice.HasValue)
+        {
+            query = query.Where(x => x.Price >= model.MinPrice.Value);
+        }
 
-            Category = model.Category,
+        if (model.MaxPrice.HasValue)
+        {
+            query = query.Where(x => x.Price <= model.MaxPrice.Value);
+        }
 
-            Brand = model.Brand,
-
-            Price = model.Price,
-
-            StockQuantity = model.StockQuantity,
-
-            MinStock = model.MinStock,
-
-            ImageUrl = model.ImageUrl,
-
-            Description = model.Description,
-
-            LastUpdatedAt = DateTime.Now
-        };
-
-        _items.Add(item);
-
-        return item;
+        return query.Select(item => new StationeryListItemViewModel
+        {
+            Id = item.Id,
+            Code = item.Code,
+            Name = item.Name,
+            Category = item.Category != null ? item.Category.Name : "N/A",
+            Price = item.Price,
+            StockQuantity = item.StockQuantity,
+            MinStock = item.MinStock,
+            ImageUrl = item.ImageUrl
+        }).ToList();
     }
 
-    public StationeryStatsViewModel GetStats()
+    public async Task<StationeryStatsViewModel> GetStatsAsync()
     {
-        var totalProducts = _items.Count;
-
-        var totalStockQuantity = _items.Sum(item =>
-            item.StockQuantity);
-
-        var totalInventoryValue = _items.Sum(item =>
-            item.Price * item.StockQuantity);
-
-        var outOfStockCount = _items.Count(item =>
-            item.StockQuantity <= 0);
-
-        var lowStockCount = _items.Count(item =>
-            item.StockQuantity > 0 &&
-            item.StockQuantity <= item.MinStock);
+        var items = await _stationeryRepository.GetAllReadOnlyAsync();
 
         return new StationeryStatsViewModel
         {
-            TotalProducts = totalProducts,
+            TotalProducts = items.Count,
 
-            TotalStockQuantity = totalStockQuantity,
+            TotalStockQuantity =
+                items.Sum(x => x.StockQuantity),
 
-            TotalInventoryValue = totalInventoryValue,
+            TotalInventoryValue =
+                items.Sum(x => x.Price * x.StockQuantity),
 
-            OutOfStockCount = outOfStockCount,
+            OutOfStockCount =
+                items.Count(x => x.StockQuantity <= 0),
 
-            LowStockCount = lowStockCount
+            LowStockCount =
+                items.Count(x =>
+                    x.StockQuantity > 0 &&
+                    x.StockQuantity <= x.MinStock)
         };
     }
+
 }

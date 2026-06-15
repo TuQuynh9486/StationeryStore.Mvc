@@ -1,0 +1,32 @@
+@model List<StationeryStore.Mvc.ViewModels.HealthCheckItemViewModel>
+
+@{
+    ViewData["Title"] = "EF Core Data Health";
+}
+
+<h1>EF Core Data Health</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Check</th>
+            <th>Expected</th>
+            <th>Actual</th>
+            <th>Status</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Check</td>
+                <td>@item.Expected</td>
+                <td>@item.Actual</td>
+                <td>@item.Status</td>
+                <td>@item.Note</td>
+            </tr>
+        }
+    </tbody>
+</table>

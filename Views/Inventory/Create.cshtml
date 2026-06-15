@@ -1,0 +1,79 @@
+@model StationeryStore.Mvc.ViewModels.InventoryCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Inventory Transaction";
+}
+
+<h2>Create Inventory Transaction</h2>
+
+<p>
+    Nhập kho sản phẩm và cập nhật tồn kho.
+</p>
+
+<hr />
+
+<form asp-controller="Inventory"
+      asp-action="Create"
+      method="post">
+
+    <div class="mb-3">
+        <label asp-for="StationeryItemId"
+               class="form-label">
+            Product Id
+        </label>
+
+        <input asp-for="StationeryItemId"
+               class="form-control" />
+
+        <span asp-validation-for="StationeryItemId"
+              class="text-danger">
+        </span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Quantity"
+               class="form-label">
+            Quantity
+        </label>
+
+        <input asp-for="Quantity"
+               class="form-control" />
+
+        <span asp-validation-for="Quantity"
+              class="text-danger">
+        </span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Note"
+               class="form-label">
+            Note
+        </label>
+
+        <textarea asp-for="Note"
+                  class="form-control"
+                  rows="4">
+        </textarea>
+
+        <span asp-validation-for="Note"
+              class="text-danger">
+        </span>
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Save Transaction
+    </button>
+
+    <a asp-controller="Inventory"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
