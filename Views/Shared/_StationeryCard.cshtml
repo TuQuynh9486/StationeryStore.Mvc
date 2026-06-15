@@ -2,14 +2,17 @@
 
 <div class="product-card">
 
-    <img src="@Model.ImageUrl"
-         alt="@Model.Name"
-         class="product-image" />
+    <img src="@Model.ImageUrl" alt="@Model.Name" class="product-image" />
 
     <h3>@Model.Name</h3>
 
     <p class="product-meta">
         Mã sản phẩm: @Model.Code
+    </p>
+
+    <p>
+        Barcode:
+        <strong>@Model.Barcode</strong>
     </p>
 
     <p class="product-meta">
@@ -49,10 +52,7 @@
     }
 
     <div class="card-actions">
-        <a class="btn btn-light"
-           asp-controller="Stationery"
-           asp-action="Detail"
-           asp-route-id="@Model.Id">
+        <a class="btn btn-light" asp-controller="Stationery" asp-action="Detail" asp-route-id="@Model.Id">
             Xem chi tiết
         </a>
     </div>

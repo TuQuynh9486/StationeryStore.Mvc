@@ -6,6 +6,8 @@ public class StationeryListItemViewModel
 
     public string Code { get; set; } = "";
 
+    public string Barcode { get; set; } = "";
+
     public string Name { get; set; } = "";
 
     public string Category { get; set; } = "";
@@ -26,39 +28,11 @@ public class StationeryListItemViewModel
 
     public string InventoryValueText => $"{InventoryValue:N0} VND";
 
-    public string StockStatus
-    {
-        get
-        {
-            if (StockQuantity <= 0)
-            {
-                return "Hết hàng";
-            }
+    public string StockStatus { get; set; } = "";
 
-            if (StockQuantity <= MinStock)
-            {
-                return "Sắp hết hàng";
-            }
+    public string StockStatusClass { get; set; } = "";
 
-            return "Còn hàng";
-        }
-    }
 
-    public string StockStatusClass
-    {
-        get
-        {
-            if (StockQuantity <= 0)
-            {
-                return "badge badge-danger";
-            }
 
-            if (StockQuantity <= MinStock)
-            {
-                return "badge badge-warning";
-            }
 
-            return "badge badge-success";
-        }
-    }
 }

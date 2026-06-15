@@ -35,13 +35,31 @@ public class StationeryService : IStationeryService
         {
             Id = item.Id,
             Code = item.Code,
+            Barcode = item.Barcode,
             Name = item.Name,
-            Category = item.Category != null ? item.Category.Name : "Chưa phân loại",
+            Category = item.Category != null
+        ? item.Category.Name
+        : "Chưa phân loại",
+
             Brand = item.Brand,
             Price = item.Price,
             StockQuantity = item.StockQuantity,
             MinStock = item.MinStock,
-            ImageUrl = item.ImageUrl
+            ImageUrl = item.ImageUrl,
+
+            StockStatus =
+        item.StockQuantity <= 0
+            ? "Hết hàng"
+            : item.StockQuantity <= _settings.LowStockThreshold
+                ? "Sắp hết hàng"
+                : "Còn hàng",
+
+            StockStatusClass =
+        item.StockQuantity <= 0
+            ? "badge badge-danger"
+            : item.StockQuantity <= _settings.LowStockThreshold
+                ? "badge badge-warning"
+                : "badge badge-success"
         }).ToList();
     }
 
@@ -96,19 +114,33 @@ public class StationeryService : IStationeryService
                 model.MaxPrice,
                 model.Keyword);
 
-        return items.Select(item =>
-            new StationeryListItemViewModel
-            {
-                Id = item.Id,
-                Code = item.Code,
-                Name = item.Name,
-                Category = item.Category?.Name ?? "",
-                Brand = item.Brand,
-                Price = item.Price,
-                StockQuantity = item.StockQuantity,
-                MinStock = item.MinStock,
-                ImageUrl = item.ImageUrl
-            }).ToList();
+        return items.Select(item => new StationeryListItemViewModel
+        {
+            Id = item.Id,
+            Code = item.Code,
+            Barcode = item.Barcode,
+            Name = item.Name,
+            Category = item.Category?.Name ?? "",
+            Brand = item.Brand,
+            Price = item.Price,
+            StockQuantity = item.StockQuantity,
+            MinStock = item.MinStock,
+            ImageUrl = item.ImageUrl,
+
+            StockStatus =
+                item.StockQuantity <= 0
+                    ? "Hết hàng"
+                    : item.StockQuantity <= _settings.LowStockThreshold
+                        ? "Sắp hết hàng"
+                        : "Còn hàng",
+
+            StockStatusClass =
+                item.StockQuantity <= 0
+                    ? "badge badge-danger"
+                    : item.StockQuantity <= _settings.LowStockThreshold
+                        ? "badge badge-warning"
+                        : "badge badge-success"
+        }).ToList();
     }
     public async Task<StationeryStatsViewModel> GetStatsAsync()
     {

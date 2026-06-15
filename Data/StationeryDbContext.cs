@@ -70,6 +70,10 @@ public class StationeryDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50);
 
+      entity.Property(x => x.Barcode)
+                .IsRequired()
+                .HasMaxLength(20);
+
       entity.Property(i => i.Name)
                 .IsRequired()
                 .HasMaxLength(150);
@@ -150,8 +154,8 @@ public class StationeryDbContext : DbContext
     modelBuilder.Entity<Supplier>().HasData(
         new Supplier { Id = 1, Name = "Thiên Long", Phone = "0901234567" },
         new Supplier { Id = 2, Name = "Hồng Hà", Phone = "0907654321" },
-        new Supplier { Id = 3, Name = "FlexOffice", Phone = "0901122334"},
-        new Supplier { Id = 4, Name = "Deli", Phone = "0901567234"}
+        new Supplier { Id = 3, Name = "FlexOffice", Phone = "0901122334" },
+        new Supplier { Id = 4, Name = "Deli", Phone = "0901567234" }
     );
 
     // =========================
@@ -162,6 +166,7 @@ public class StationeryDbContext : DbContext
         {
           Id = 1,
           Code = "SP001",
+          Barcode = "893500180001",
           Name = "Bút bi Thiên Long",
           Brand = "Thiên Long",
           Price = 5000,
@@ -177,6 +182,7 @@ public class StationeryDbContext : DbContext
         {
           Id = 2,
           Code = "SP002",
+          Barcode = "893500180002",
           Name = "Sổ tay Hồng Hà",
           Brand = "Hồng Hà",
           Price = 25000,
@@ -192,6 +198,7 @@ public class StationeryDbContext : DbContext
         {
           Id = 3,
           Code = "SP003",
+          Barcode = "893500180003",
           Name = "Thước kẻ 30cm",
           Brand = "FlexOffice",
           Price = 8000,
@@ -207,6 +214,7 @@ public class StationeryDbContext : DbContext
         {
           Id = 4,
           Code = "SP004",
+          Barcode = "893500180004",
           Name = "Hộp bút vải",
           Brand = "Deli",
           Price = 55000,
@@ -223,6 +231,7 @@ public class StationeryDbContext : DbContext
         {
           Id = 5,
           Code = "SP005",
+          Barcode = "893500180005",
           Name = "Gôm tẩy học sinh",
           Brand = "FlexOffice",
           Price = 3000,
@@ -239,6 +248,7 @@ public class StationeryDbContext : DbContext
         {
           Id = 6,
           Code = "SP006",
+          Barcode = "893500180006",
           Name = "Tập học sinh 200 trang",
           Brand = "Hồng Hà",
           Price = 35000,
@@ -250,11 +260,12 @@ public class StationeryDbContext : DbContext
           CategoryId = 2,
           SupplierId = 2
         },
-        
+
         new StationeryItem
         {
           Id = 7,
           Code = "SP007",
+          Barcode = "893500180007",
           Name = "Bút chì màu Deli",
           Brand = "Deli",
           Price = 65000,
