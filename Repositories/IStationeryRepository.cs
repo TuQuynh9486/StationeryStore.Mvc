@@ -10,6 +10,10 @@ public interface IStationeryRepository
 
     Task<StationeryItem?> GetByIdAsync(int id);
 
+    Task UpdateAsync(StationeryItem item);
+
+    Task DeleteAsync(int id);
+
     Task<List<StationeryItem>> SearchAsync(
         int? categoryId,
         decimal? minPrice,
@@ -19,4 +23,18 @@ public interface IStationeryRepository
     Task AddAsync(StationeryItem item);
 
     Task SaveChangesAsync();
+
+    Task<List<StationeryItem>> GetTrashAsync();
+
+    Task RestoreAsync(int id);
+
+    Task<bool> ExistsCodeAsync(string code);
+
+    Task<bool> ExistsCodeExceptIdAsync(
+        string code,
+        int id);
+
+    Task RestoreAsync(
+        int id,
+        byte[] rowVersion);
 }

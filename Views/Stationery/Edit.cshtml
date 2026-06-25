@@ -1,0 +1,219 @@
+@model StationeryStore.Mvc.ViewModels.StationeryEditViewModel
+
+@{
+ViewData["Title"] = "Edit Stationery";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">
+            Edit Stationery
+        </h2>
+
+    <p class="page-description">
+        Cập nhật thông tin sản phẩm văn phòng phẩm.
+    </p>
+</div>
+
+<a class="btn btn-light"
+   asp-controller="Stationery"
+   asp-action="Index">
+    Quay lại danh sách
+</a>
+
+
+</div>
+
+<form asp-controller="Stationery"
+      asp-action="Edit"
+      method="post"
+      class="form-box">
+
+
+<input asp-for="Id" type="hidden" />
+<input asp-for="RowVersion" type="hidden" />
+
+<div asp-validation-summary="ModelOnly"
+     class="alert alert-danger">
+</div>
+
+<div class="form-group">
+    <label asp-for="Code">
+        Mã sản phẩm 
+    </label>
+
+    <input asp-for="Code"
+           class="form-control" />
+
+    <span asp-validation-for="Code"
+          class="text-danger">
+    </span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Name">
+        Tên sản phẩm
+    </label>
+
+    <input asp-for="Name"
+           class="form-control" />
+
+    <span asp-validation-for="Name"
+          class="text-danger">
+    </span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Brand">
+        Thương hiệu
+    </label>
+
+    <input asp-for="Brand"
+           class="form-control" />
+
+    <span asp-validation-for="Brand"
+          class="text-danger">
+    </span>
+</div>
+
+<div class="form-group">
+
+    <label asp-for="CategoryId">
+        Danh mục
+    </label>
+
+    <select asp-for="CategoryId"
+            asp-items="Model.Categories"
+            class="form-control">
+    </select>
+
+    <span asp-validation-for="CategoryId"
+          class="text-danger">
+    </span>
+
+</div>
+
+
+<div class="form-group">
+    <label asp-for="Price">
+        Giá bán
+    </label>
+
+    <input asp-for="Price"
+           class="form-control"
+           min="0" />
+
+    <span asp-validation-for="Price"
+          class="text-danger">
+    </span>
+</div>
+
+<div class="form-group">
+    <label asp-for="StockQuantity">
+        Số lượng tồn kho
+    </label>
+
+    <input asp-for="StockQuantity"
+           class="form-control"
+           min="0" />
+
+    <span asp-validation-for="StockQuantity"
+          class="text-danger">
+    </span>
+</div>
+
+<div class="form-group">
+    <label asp-for="MinStock">
+        Mức tồn tối thiểu
+    </label>
+
+    <input asp-for="MinStock"
+           class="form-control"
+           min="0" />
+
+    <span asp-validation-for="MinStock"
+          class="text-danger">
+    </span>
+</div>
+
+<div class="form-group">
+    <label asp-for="ImageUrl"></label>
+
+    <input asp-for="ImageUrl"
+           id="ImageUrl"
+           class="form-control" />
+
+    <span asp-validation-for="ImageUrl"
+          class="text-danger">
+    </span>
+
+    <div class="mt-3">
+        <img id="previewImage"
+             src="@Model.ImageUrl"
+             alt="Preview"
+             style="
+                max-width:220px;
+                border-radius:10px;
+                border:1px solid #ddd;
+                padding:5px;
+                background:white;" />
+    </div>
+</div>
+
+<div class="form-group">
+
+    <label asp-for="Description">
+        Mô tả sản phẩm
+    </label>
+
+    <textarea asp-for="Description"
+              class="form-control"
+              rows="4">
+    </textarea>
+
+    <span asp-validation-for="Description"
+          class="text-danger">
+    </span>
+
+</div>
+
+
+<div class="form-actions mt-3">
+
+    <button type="submit"
+            class="btn btn-primary">
+        Save Changes
+    </button>
+
+    <a asp-controller="Stationery"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</div>
+
+
+</form>
+
+@section Scripts
+{ <partial name="_ValidationScriptsPartial" />
+
+
+<script>
+
+    const imageInput =
+        document.getElementById("ImageUrl");
+
+    const preview =
+        document.getElementById("previewImage");
+
+    imageInput.addEventListener("input", function ()
+    {
+        preview.src = this.value;
+    });
+
+</script>
+
+
+}

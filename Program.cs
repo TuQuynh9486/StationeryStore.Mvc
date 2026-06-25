@@ -48,6 +48,10 @@ builder.Services.AddScoped<
     IHealthService,
     HealthService>();
 
+builder.Logging.AddConsole();
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<StationeryDbContext>();
 
 var app = builder.Build();
 
@@ -64,6 +68,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapHealthChecks("/health/live");
+
+app.MapHealthChecks("/health/ready");
 
 app.MapControllerRoute(
     name: "default",

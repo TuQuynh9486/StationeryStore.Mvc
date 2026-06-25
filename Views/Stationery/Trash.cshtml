@@ -1,0 +1,48 @@
+@model List<StationeryListItemViewModel>
+
+@{
+    ViewData["Title"] = "Trash";
+}
+
+<h2>Deleted Products</h2>
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Code</td>
+                <td>@item.Name</td>
+                <td>@item.PriceText</td>
+                <td>@item.StockQuantity</td>
+                <td>
+
+                    <form asp-action="Restore" asp-route-id="@item.Id" method="post">
+
+                        <input type="hidden" name="rowVersion" value="@Convert.ToBase64String(item.RowVersion)" />
+
+                        <button class="btn btn-success">
+                            Restore
+                        </button>
+
+                    </form>
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>

@@ -112,11 +112,13 @@ public class StationeryRepository : IStationeryRepository
     // =========================
     public async Task DeleteAsync(int id)
     {
-        var item = await _context.StationeryItems.FindAsync(id);
+        var item =
+            await _context.StationeryItems.FindAsync(id);
 
         if (item != null)
         {
-            _context.StationeryItems.Remove(item);
+            item.IsDeleted = true;
+            item.DeletedAt = DateTime.UtcNow;
         }
     }
 
@@ -126,5 +128,70 @@ public class StationeryRepository : IStationeryRepository
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
+    }
+
+    // =========================
+    // TRASH 
+    // =========================
+    public async Task<List<StationeryItem>> GetTrashAsync()
+    {
+        return await _context.StationeryItems
+            .IgnoreQueryFilters()
+            .Where(x => x.IsDeleted)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    // =========================
+    // RESTORE 
+    // =========================
+    public async Task RestoreAsync(int id)
+    {
+        var item = await _context.StationeryItems
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (item != null)
+        {
+            item.IsDeleted = false;
+            item.DeletedAt = null;
+            item.UpdatedAt = DateTime.UtcNow;
+        }
+    }
+
+    public async Task<bool> ExistsCodeAsync(string code)
+    {
+        return await _context.StationeryItems
+            .AnyAsync(x => x.Code == code);
+    }
+
+    public async Task<bool> ExistsCodeExceptIdAsync(
+    string code,
+    int id)
+    {
+        return await _context.StationeryItems
+            .AnyAsync(x =>
+                x.Code == code &&
+                x.Id != id);
+    }
+
+    public async Task RestoreAsync(
+    int id,
+    byte[] rowVersion)
+    {
+        var item =
+            await _context.StationeryItems
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (item == null)
+            return;
+
+        _context.Entry(item)
+            .Property(x => x.RowVersion)
+            .OriginalValue = rowVersion;
+
+        item.IsDeleted = false;
+        item.DeletedAt = null;
     }
 }

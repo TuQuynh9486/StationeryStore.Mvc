@@ -148,10 +148,10 @@ public class StationeryDbContext : DbContext
     // SEED DATA - SUPPLIER
     // =========================
     modelBuilder.Entity<Supplier>().HasData(
-        new Supplier { Id = 1, Name = "Thiên Long", Phone = "0901234567" },
-        new Supplier { Id = 2, Name = "Hồng Hà", Phone = "0907654321" },
-        new Supplier { Id = 3, Name = "FlexOffice", Phone = "0901122334"},
-        new Supplier { Id = 4, Name = "Deli", Phone = "0901567234"}
+        new Supplier { Id = 1, Name = "Công ty Phát Hành A", Phone = "0901234567" },
+        new Supplier { Id = 2, Name = "Nhà phân phối B", Phone = "0907654321" },
+        new Supplier { Id = 3, Name = "Công ty Văn Phòng Phẩm C", Phone = "0901122334"},
+        new Supplier { Id = 4, Name = "Công ty Phân phối Văn phòng phẩm ABC", Phone = "0901567234"}
     );
 
     // =========================
@@ -267,5 +267,8 @@ public class StationeryDbContext : DbContext
           SupplierId = 4
         }
     );
+
+    modelBuilder.Entity<StationeryItem>()
+    .HasQueryFilter(x => !x.IsDeleted);
   }
 }

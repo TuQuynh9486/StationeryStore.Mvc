@@ -2,9 +2,7 @@
 
 <div class="product-card">
 
-    <img src="@Model.ImageUrl"
-         alt="@Model.Name"
-         class="product-image" />
+    <img src="@Model.ImageUrl" alt="@Model.Name" class="product-image" />
 
     <h3>@Model.Name</h3>
 
@@ -49,11 +47,27 @@
     }
 
     <div class="card-actions">
-        <a class="btn btn-light"
-           asp-controller="Stationery"
-           asp-action="Detail"
-           asp-route-id="@Model.Id">
-            Xem chi tiết
+        <a class="btn btn-light" asp-controller="Stationery" asp-action="Detail" asp-route-id="@Model.Id">
+            Detail
         </a>
+
+        <a class="btn btn-light" asp-controller="Stationery" asp-action="Edit" asp-route-id="@Model.Id">
+            Edit
+        </a>
+
+        <a class="btn btn-light" asp-controller="Stationery" asp-action="AdjustStock" asp-route-id="@Model.Id">
+            Adjust Stock
+        </a>
+
+        <form asp-controller="Stationery" asp-action="Delete" asp-route-id="@Model.Id" method="post"
+              onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn btn-light">
+                Delete
+            </button>
+
+        </form>
     </div>
 </div>

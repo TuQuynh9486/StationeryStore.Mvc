@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\user\\OneDrive - VNU-HCMUS\\Desktop\\API_ASPNET\\StationeryStore.Mvc\\wwwroot\\images\\book_campus.png",
+      "PackagePath": "staticwebassets\\images\\book_campus.png"
+    },
+    {
       "Id": "C:\\Users\\user\\OneDrive - VNU-HCMUS\\Desktop\\API_ASPNET\\StationeryStore.Mvc\\wwwroot\\images\\eraser.jpg",
       "PackagePath": "staticwebassets\\images\\eraser.jpg"
     },

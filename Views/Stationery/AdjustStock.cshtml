@@ -1,0 +1,134 @@
+@model AdjustStockViewModel
+
+@{
+    ViewData["Title"] = "Adjust Stock";
+}
+
+<div class="adjust-layout">
+
+    <div class="product-info-card">
+
+        <h3>@Model.Name</h3>
+
+        <p>
+            <strong>Code:</strong>
+            @Model.Code
+        </p>
+
+        <p>
+            <strong>Tồn kho hiện tại:</strong>
+            <span id="currentStock">
+                @Model.CurrentStock
+            </span>
+        </p>
+
+        @if (Model.CurrentStock <= 0)
+        {
+            <span class="badge badge-danger">
+                Hết hàng
+            </span>
+        }
+        else if (Model.CurrentStock <= 10)
+        {
+            <span class="badge badge-warning">
+                Sắp hết hàng
+            </span>
+        }
+        else
+        {
+            <span class="badge badge-success">
+                Còn hàng
+            </span>
+        }
+
+    </div>
+
+    <div class="adjust-form-card">
+
+        <form asp-action="AdjustStock"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="Id"
+                   type="hidden" />
+
+            <input asp-for="RowVersion"
+                   type="hidden" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger">
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Thay đổi số lượng
+                </label>
+
+                <input asp-for="ChangeQuantity"
+                       class="form-control"
+                       id="changeQty" />
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Tồn kho sau khi cập nhật
+                </label>
+
+                <input id="newStock"
+                       class="form-control"
+                       readonly />
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Save
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        const current =
+            @Model.CurrentStock;
+
+        const qty =
+            document.getElementById("changeQty");
+
+        const result =
+            document.getElementById("newStock");
+
+        function updateStock()
+        {
+            const value =
+                parseInt(qty.value || 0);
+
+            result.value =
+                current + value;
+        }
+
+        updateStock();
+
+        qty.addEventListener(
+            "input",
+            updateStock);
+
+    </script>
+}

@@ -4,6 +4,9 @@ public class StationeryListItemViewModel
 {
     public int Id { get; set; }
 
+    public byte[] RowVersion { get; set; }
+        = Array.Empty<byte>();
+
     public string Code { get; set; } = "";
 
     public string Name { get; set; } = "";
@@ -26,39 +29,7 @@ public class StationeryListItemViewModel
 
     public string InventoryValueText => $"{InventoryValue:N0} VND";
 
-    public string StockStatus
-    {
-        get
-        {
-            if (StockQuantity <= 0)
-            {
-                return "Hết hàng";
-            }
+    public string StockStatus { get; set; } = "";
 
-            if (StockQuantity <= MinStock)
-            {
-                return "Sắp hết hàng";
-            }
-
-            return "Còn hàng";
-        }
-    }
-
-    public string StockStatusClass
-    {
-        get
-        {
-            if (StockQuantity <= 0)
-            {
-                return "badge badge-danger";
-            }
-
-            if (StockQuantity <= MinStock)
-            {
-                return "badge badge-warning";
-            }
-
-            return "badge badge-success";
-        }
-    }
+    public string StockStatusClass { get; set; } = "";
 }

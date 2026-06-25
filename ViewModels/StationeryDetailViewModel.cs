@@ -22,7 +22,7 @@ public class StationeryDetailViewModel
 
     public string Description { get; set; } = "";
 
-    public DateTime LastUpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public string PriceText => $"{Price:N0} VND";
 
@@ -30,7 +30,7 @@ public class StationeryDetailViewModel
 
     public string InventoryValueText => $"{InventoryValue:N0} VND";
 
-    public string LastUpdatedText => LastUpdatedAt.ToString("dd/MM/yyyy HH:mm");
+    public string LastUpdatedText  => UpdatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa từng cập nhật";
 
     public string StockStatus
     {

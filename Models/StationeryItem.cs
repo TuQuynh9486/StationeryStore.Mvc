@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 namespace StationeryStore.Mvc.Models;
 
 public class StationeryItem
@@ -44,4 +45,15 @@ public class StationeryItem
     public Category? Category { get; set; }
 
     public Supplier? Supplier { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
+    [Timestamp]
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+    public bool IsDeleted { get; set; } = false;
+
 }
