@@ -93,7 +93,7 @@ public class StationeryController : Controller
         return View(model);
     }
     [HttpGet]
-    public async Task<IActionResult> Stats()
+    public async Task<IActionResult> Dashboard()
     {
         var model =
             await _stationeryService.GetStatsAsync();

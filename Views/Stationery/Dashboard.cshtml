@@ -1,0 +1,53 @@
+@model StationeryStatsViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="page-title">
+    Dashboard
+</h2>
+
+<div class="stats-grid">
+
+    <div class="stats-card">
+        <h5>Tổng số sản phẩm</h5>
+        <h2>@Model.TotalProducts</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Đang hoạt động</h5>
+        <h2>@Model.ActiveProducts</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Đã xóa</h5>
+        <h2>@Model.DeletedProducts</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Tạo hôm nay</h5>
+        <h2>@Model.CreatedToday</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Cập nhật hôm nay</h5>
+        <h2>@Model.UpdatedToday</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Sắp hết</h5>
+        <h2>@Model.LowStockCount</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Hết hàng</h5>
+        <h2>@Model.OutOfStockCount</h2>
+    </div>
+
+    <div class="stats-card">
+        <h5>Tổng giá trị tồn kho</h5>
+        <h2>@Model.TotalInventoryValue.ToString("N0") VNĐ</h2>
+    </div>
+
+</div>

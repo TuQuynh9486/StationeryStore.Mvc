@@ -3,6 +3,8 @@ using StationeryStore.Mvc.Data;
 using StationeryStore.Mvc.Options;
 using StationeryStore.Mvc.Repositories;
 using StationeryStore.Mvc.Services;
+using System.Text.Json;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,8 +73,41 @@ app.UseAuthorization();
 
 app.MapHealthChecks("/health/live");
 
-app.MapHealthChecks("/health/ready");
+app.MapHealthChecks(
+    "/health/ready",
+    new HealthCheckOptions
+    {
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType =
+                "application/json";
 
+            var result = new
+            {
+                status = report.Status.ToString(),
+
+                totalChecks = report.Entries.Count,
+
+                checks = report.Entries.Select(x => new
+                {
+                    name = x.Key,
+                    status = x.Value.Status.ToString()
+                }),
+
+                application = "Stationery Store MVC",
+
+                generatedAt = DateTime.UtcNow
+            };
+
+            await context.Response.WriteAsync(
+                JsonSerializer.Serialize(
+                    result,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }));
+        }
+    });
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

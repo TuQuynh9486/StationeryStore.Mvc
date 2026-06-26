@@ -48,6 +48,18 @@ public class StationeryRepository : IStationeryRepository
     }
 
     // =========================
+    // GET ALL INCLUDING DELETED
+    // =========================
+
+    public async Task<List<StationeryItem>>
+        GetAllIncludingDeletedAsync()
+    {
+        return await _context.StationeryItems
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .ToListAsync();
+    }
+    // =========================
     // ADD NEW ITEM
     // =========================
     public async Task AddAsync(StationeryItem item)

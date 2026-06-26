@@ -201,25 +201,41 @@ public class StationeryService : IStationeryService
     // =========================
     public async Task<StationeryStatsViewModel> GetStatsAsync()
     {
-        var items = await _stationeryRepository.GetAllReadOnlyAsync();
+        var items = await _stationeryRepository.GetAllIncludingDeletedAsync();
 
         return new StationeryStatsViewModel
         {
             TotalProducts = items.Count,
 
+            ActiveProducts =
+                items.Count(x => !x.IsDeleted),
+
+            DeletedProducts =
+                items.Count(x => x.IsDeleted),
+
+            CreatedToday =
+                items.Count(x =>
+                    x.CreatedAt.Date == DateTime.UtcNow.Date),
+
+            UpdatedToday =
+                items.Count(x =>
+                    x.UpdatedAt?.Date == DateTime.UtcNow.Date),
+
             TotalStockQuantity =
                 items.Sum(x => x.StockQuantity),
 
             TotalInventoryValue =
-                items.Sum(x => x.Price * x.StockQuantity),
+                items.Sum(x => x.StockQuantity * x.Price),
 
             OutOfStockCount =
-                items.Count(x => x.StockQuantity <= 0),
+                items.Count(x => x.StockQuantity == 0),
 
             LowStockCount =
                 items.Count(x =>
-                    x.StockQuantity > 0 &&
-                    x.StockQuantity <= _settings.LowStockThreshold)
+                    x.StockQuantity <= x.MinStock &&
+                    x.StockQuantity > 0),
+
+            LowStockThreshold = 10
         };
     }
     // =========================

@@ -7,6 +7,7 @@ public interface IStationeryRepository
     Task<List<StationeryItem>> GetAllAsync();
 
     Task<List<StationeryItem>> GetAllReadOnlyAsync();
+    Task<List<StationeryItem>> GetAllIncludingDeletedAsync();
 
     Task<StationeryItem?> GetByIdAsync(int id);
 

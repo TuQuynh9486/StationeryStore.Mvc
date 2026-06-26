@@ -59,15 +59,9 @@
             Adjust Stock
         </a>
 
-        <form asp-controller="Stationery" asp-action="Delete" asp-route-id="@Model.Id" method="post"
-              onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');">
+        <a class="btn btn-light" asp-controller="Stationery" asp-action="Delete" asp-route-id="@Model.Id">
+            Delete
+        </a>
 
-            @Html.AntiForgeryToken()
-
-            <button type="submit" class="btn btn-light">
-                Delete
-            </button>
-
-        </form>
     </div>
 </div>
