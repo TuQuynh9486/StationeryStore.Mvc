@@ -1,12 +1,12 @@
-using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using StationeryStore.Mvc.Models;
 
 namespace StationeryStore.Mvc.Data;
 
-public class StationeryDbContext : DbContext
+public class StationeryDbContext
+    : IdentityDbContext<ApplicationUser>
 {
   public StationeryDbContext(DbContextOptions<StationeryDbContext> options)
       : base(options)
@@ -21,6 +21,7 @@ public class StationeryDbContext : DbContext
   public DbSet<Supplier> Suppliers => Set<Supplier>();
   public DbSet<InventoryRecord> InventoryRecords => Set<InventoryRecord>();
   public DbSet<InventoryDetail> InventoryDetails => Set<InventoryDetail>();
+  public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -134,7 +135,33 @@ public class StationeryDbContext : DbContext
                 .HasForeignKey(d => d.StationeryItemId)
                 .OnDelete(DeleteBehavior.Restrict);
     });
+    // =========================
+    // AUDITLOG
+    // =========================
+    modelBuilder.Entity<AuditLog>(entity =>
+    {
+      entity.ToTable("AuditLogs");
 
+      entity.HasKey(x => x.Id);
+
+      entity.Property(x => x.UserName)
+        .HasMaxLength(100);
+
+      entity.Property(x => x.Action)
+        .HasMaxLength(50);
+
+      entity.Property(x => x.EntityName)
+        .HasMaxLength(100);
+
+      entity.Property(x => x.Result)
+        .HasMaxLength(30);
+
+      entity.Property(x => x.Description)
+        .HasMaxLength(500);
+
+      entity.Property(x => x.TraceId)
+        .HasMaxLength(100);
+    });
     // =========================
     // SEED DATA - CATEGORY
     // =========================
@@ -150,8 +177,8 @@ public class StationeryDbContext : DbContext
     modelBuilder.Entity<Supplier>().HasData(
         new Supplier { Id = 1, Name = "Công ty Phát Hành A", Phone = "0901234567" },
         new Supplier { Id = 2, Name = "Nhà phân phối B", Phone = "0907654321" },
-        new Supplier { Id = 3, Name = "Công ty Văn Phòng Phẩm C", Phone = "0901122334"},
-        new Supplier { Id = 4, Name = "Công ty Phân phối Văn phòng phẩm ABC", Phone = "0901567234"}
+        new Supplier { Id = 3, Name = "Công ty Văn Phòng Phẩm C", Phone = "0901122334" },
+        new Supplier { Id = 4, Name = "Công ty Phân phối Văn phòng phẩm ABC", Phone = "0901567234" }
     );
 
     // =========================
@@ -250,7 +277,7 @@ public class StationeryDbContext : DbContext
           CategoryId = 2,
           SupplierId = 2
         },
-        
+
         new StationeryItem
         {
           Id = 7,

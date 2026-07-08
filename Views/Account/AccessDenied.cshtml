@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Không có quyền truy cập";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-danger text-white">
+            <h2>🚫 Không có quyền truy cập</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h4 class="text-danger">
+                Bạn không có quyền truy cập vào trang này.
+            </h4>
+
+            <p>
+                Tài khoản của bạn đã đăng nhập thành công, nhưng không có quyền thực hiện chức năng này.
+            </p>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <p>
+                    <strong>Tài khoản hiện tại:</strong>
+                    @User.Identity.Name
+                </p>
+            }
+
+            <hr />
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary">
+                Quay về trang chủ
+            </a>
+
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="btn btn-secondary">
+                Đăng nhập bằng tài khoản khác
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
