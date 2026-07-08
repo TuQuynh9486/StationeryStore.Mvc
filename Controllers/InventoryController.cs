@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using StationeryStore.Mvc.Services;
 using StationeryStore.Mvc.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StationeryStore.Mvc.Controllers;
 
+[Authorize]
 public class InventoryController : Controller
 {
     private readonly IInventoryService _inventoryService;

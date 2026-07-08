@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using StationeryStore.Mvc.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StationeryStore.Mvc.Controllers;
 
+[Authorize]
 public class CategoriesController : Controller
 {
     private readonly ICategoryService _categoryService;
