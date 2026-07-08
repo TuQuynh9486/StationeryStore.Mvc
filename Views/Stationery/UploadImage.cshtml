@@ -1,0 +1,116 @@
+@model StationeryStore.Mvc.ViewModels.UploadImageViewModel
+
+@{
+    ViewData["Title"] = "Upload ảnh sản phẩm";
+}
+
+<h2>Upload ảnh sản phẩm</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <form asp-action="UploadImage"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger">
+            </div>
+
+            <input asp-for="Id"
+                   type="hidden" />
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Sản phẩm
+                </label>
+
+                <input class="form-control"
+                       value="@Model.Name"
+                       readonly />
+
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.CurrentImage))
+            {
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Ảnh hiện tại
+                    </label>
+
+                    <br />
+
+                    <img src="@Model.CurrentImage"
+                         style="max-width:220px"
+                         class="img-thumbnail"/>
+
+                </div>
+            }
+
+            <div class="mb-3">
+
+                <label asp-for="ImageFile"
+                       class="form-label">
+                </label>
+
+                <input asp-for="ImageFile"
+                       type="file"
+                       class="form-control"/>
+
+                <span asp-validation-for="ImageFile"
+                      class="text-danger">
+                </span>
+
+                <small class="text-muted">
+
+                    Chỉ cho phép:
+                    jpg,
+                    jpeg,
+                    png,
+                    gif.
+
+                    Dung lượng tối đa:
+                    2 MB.
+
+                </small>
+
+            </div>
+
+            <button class="btn btn-primary">
+                Upload
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Quay lại
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+}
