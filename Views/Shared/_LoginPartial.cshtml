@@ -1,0 +1,44 @@
+@using Microsoft.AspNetCore.Identity
+
+@using StationeryStore.Mvc.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="login-links">
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <span>
+        Hello, <strong>@UserManager.GetUserName(User)</strong>
+    </span>
+
+    <form asp-controller="Account"
+          asp-action="Logout"
+          method="post"
+          style="display:inline;">
+
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="logout-btn">
+            Logout
+        </button>
+
+    </form>
+}
+else
+{
+    <a asp-controller="Account"
+       asp-action="Login">
+        Login
+    </a>
+
+    <span>|</span>
+
+    <a asp-controller="Account"
+       asp-action="Register">
+        Register
+    </a>
+}
+
+</div>

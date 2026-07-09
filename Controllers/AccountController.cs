@@ -148,9 +148,7 @@ public class AccountController : Controller
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction(
-                "Index",
-                "Home");
+            return RedirectToAction("Dashboard", "Stationery");
         }
 
         _logger.LogWarning(

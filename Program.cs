@@ -337,7 +337,7 @@ app.MapHealthChecks(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Stationery}/{action=Dashboard}/{id?}");
 
 app.MapRazorPages();
 
