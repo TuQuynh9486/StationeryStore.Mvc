@@ -1,21 +1,28 @@
-@model StationeryListItemViewModel
+@model StationeryStore.Mvc.ViewModels.StationeryListItemViewModel
 
 <div class="product-card">
 
-    <img src="@Model.ImageUrl" alt="@Model.Name" class="product-image" />
+    <img src="@(!string.IsNullOrWhiteSpace(Model.ImageUrl)
+                ? Model.ImageUrl
+                : "/images/no-image.png")"
+         alt="@Model.Name"
+         class="product-image" />
 
     <h3>@Model.Name</h3>
 
     <p class="product-meta">
-        Mã sản phẩm: @Model.Code
+        <strong>Mã sản phẩm:</strong>
+        @Model.Code
     </p>
 
     <p class="product-meta">
-        Danh mục: @Model.Category
+        <strong>Danh mục:</strong>
+        @Model.Category
     </p>
 
     <p class="product-meta">
-        Thương hiệu: @Model.Brand
+        <strong>Thương hiệu:</strong>
+        @Model.Brand
     </p>
 
     <p class="product-price">
@@ -23,8 +30,8 @@
     </p>
 
     <p>
-        Số lượng tồn kho:
-        <strong>@Model.StockQuantity</strong>
+        <strong>Tồn kho:</strong>
+        @Model.StockQuantity
     </p>
 
     @if (Model.StockStatus == "Còn hàng")
@@ -46,22 +53,48 @@
         </span>
     }
 
+    <hr />
+
     <div class="card-actions">
-        <a class="btn btn-light" asp-controller="Stationery" asp-action="Detail" asp-route-id="@Model.Id">
+
+        <a class="btn btn-primary"
+           asp-controller="Stationery"
+           asp-action="Detail"
+           asp-route-id="@Model.Id">
             Detail
         </a>
 
-        <a class="btn btn-light" asp-controller="Stationery" asp-action="Edit" asp-route-id="@Model.Id">
-            Edit
-        </a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-warning"
+               asp-controller="Stationery"
+               asp-action="Edit"
+               asp-route-id="@Model.Id">
+                Edit
+            </a>
 
-        <a class="btn btn-light" asp-controller="Stationery" asp-action="AdjustStock" asp-route-id="@Model.Id">
-            Adjust Stock
-        </a>
+            <a class="btn btn-info"
+               asp-controller="Stationery"
+               asp-action="AdjustStock"
+               asp-route-id="@Model.Id">
+                Adjust Stock
+            </a>
 
-        <a class="btn btn-light" asp-controller="Stationery" asp-action="Delete" asp-route-id="@Model.Id">
-            Delete
-        </a>
+            <a class="btn btn-danger"
+               asp-controller="Stationery"
+               asp-action="UploadImage"
+               asp-route-id="@Model.Id">
+                Upload Image
+            </a>
+
+            <a class="btn btn-danger"
+               asp-controller="Stationery"
+               asp-action="Delete"
+               asp-route-id="@Model.Id">
+                Delete
+            </a>
+        }
 
     </div>
+
 </div>

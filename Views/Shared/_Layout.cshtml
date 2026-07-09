@@ -3,74 +3,128 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
 
     <title>
-        @ViewData["Title"] - StationeryStore.Mvc
+        @(ViewData["Title"] ?? "Stationery Store")
+        - Stationery Store MVC
     </title>
 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
 </head>
 
 <body>
+
     <header class="site-header">
+
         <div class="container header-content">
 
             <div class="brand">
-                <a asp-controller="Home" asp-action="Index">
+
+                <a asp-controller="Stationery"
+                   asp-action="Dashboard">
+
                     Stationery Store MVC
+
                 </a>
+
             </div>
 
             <nav class="main-nav">
 
-                <a asp-controller="Home" asp-action="Index">
-                    Home
+                <a asp-controller="Stationery"
+                   asp-action="Dashboard">
+                    Dashboard
                 </a>
 
-                <a asp-controller="Stationery" asp-action="Index">
+                <a asp-controller="Stationery"
+                   asp-action="Index">
                     Products
                 </a>
 
-                <a asp-controller="Categories" asp-action="Index">
+                <a asp-controller="Categories"
+                   asp-action="Index">
                     Categories
                 </a>
 
-                <a asp-controller="Suppliers" asp-action="Index">
+                <a asp-controller="Suppliers"
+                   asp-action="Index">
                     Suppliers
                 </a>
 
-                <a asp-controller="Inventory" asp-action="Create">
-                    Inventory Transaction
-                </a>
-
-                <a asp-controller="Health" asp-action="Index">
+                <a asp-controller="Health"
+                   asp-action="Index">
                     Data Health
                 </a>
 
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Inventory"
+                       asp-action="Create">
+                        Inventory
+                    </a>
+
+                    <a asp-controller="AuditLogs"
+                       asp-action="Index">
+                        Audit Logs
+                    </a>
+                }
 
             </nav>
 
+            <div class="login-menu">
+
+                <partial name="_LoginPartial" />
+
+            </div>
+
         </div>
+
     </header>
 
     <main class="container main-content">
+
         @RenderBody()
+
     </main>
 
     <footer class="site-footer">
+
         <div class="container footer-content">
 
             <span>
-                &copy; 2026 - StationeryStore.Mvc
+
+                &copy; @DateTime.Now.Year
+                - Stationery Store MVC
+
             </span>
 
-            <a asp-controller="Home" asp-action="Privacy">
+            <span>
+
+                ASP.NET Core MVC Final Mini Project
+
+            </span>
+
+            <a asp-controller="Home"
+               asp-action="Privacy">
+
                 Privacy Policy
+
             </a>
 
         </div>
+
     </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
