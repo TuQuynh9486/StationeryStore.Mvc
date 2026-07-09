@@ -1,0 +1,110 @@
+@model InventoryRecord
+
+@{
+    ViewData["Title"] = "Inventory Detail";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1 class="page-title">
+            Inventory Transaction Detail
+        </h1>
+
+        <p class="page-description">
+            View information about this inventory transaction.
+        </p>
+
+    </div>
+
+    <div>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+
+    </div>
+
+</div>
+
+<div class="form-box">
+
+    <div class="form-group">
+
+        <label>Transaction ID</label>
+
+        <input class="form-control"
+               value="@Model.Id"
+               readonly />
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Created At</label>
+
+        <input class="form-control"
+               value="@Model.CreatedAt.ToLocalTime()"
+               readonly />
+
+    </div>
+
+</div>
+
+<br />
+
+<h3>Inventory Items</h3>
+
+@if (!Model.InventoryDetails.Any())
+{
+    <div class="info-box">
+
+        No inventory details.
+
+    </div>
+}
+else
+{
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Product Code</th>
+
+                <th>Product Name</th>
+
+                <th>Quantity</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        @foreach (var item in Model.InventoryDetails)
+        {
+            <tr>
+
+                <td>
+                    @item.StationeryItem.Code
+                </td>
+
+                <td>
+                    @item.StationeryItem.Name
+                </td>
+
+                <td>
+                    @item.Quantity
+                </td>
+
+            </tr>
+        }
+
+        </tbody>
+
+    </table>
+}

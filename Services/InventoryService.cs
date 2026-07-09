@@ -7,13 +7,22 @@ namespace StationeryStore.Mvc.Services;
 public class InventoryService : IInventoryService
 {
     private readonly StationeryDbContext _context;
+    private readonly IAuditLogService _auditService;
+    private readonly ILogger<InventoryService> _logger;
 
     public InventoryService(
-        StationeryDbContext context)
+        StationeryDbContext context,
+        IAuditLogService auditService,
+        ILogger<InventoryService> logger)
     {
         _context = context;
+        _auditService = auditService;
+        _logger = logger;
     }
 
+    // =========================
+    // CREATE INVENTORY RECORD
+    // =========================
     public async Task CreateInventoryRecordAsync(
         int stationeryItemId,
         int quantity,
@@ -34,7 +43,7 @@ public class InventoryService : IInventoryService
 
             var record = new InventoryRecord
             {
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
                 Note = note
             };
 
@@ -57,20 +66,73 @@ public class InventoryService : IInventoryService
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
+
+            _logger.LogInformation(
+                "Inventory transaction created. Product={Code}, Quantity={Quantity}",
+                item.Code,
+                quantity);
+
+            await _auditService.LogAsync(
+                "Create Inventory",
+                "InventoryRecord",
+                record.Id,
+                "Success",
+                $"Product={item.Code}, Quantity={quantity}");
         }
-        catch
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
+
+            _logger.LogError(
+                ex,
+                "Create inventory transaction failed.");
+
+            await _auditService.LogAsync(
+                "Create Inventory",
+                "InventoryRecord",
+                null,
+                "Failed",
+                ex.Message);
+
             throw;
         }
     }
 
-    public async Task<List<InventoryRecord>>
-        GetInventoryHistoryAsync()
+    // =========================
+    // INVENTORY HISTORY
+    // =========================
+    public async Task<List<InventoryRecord>> GetInventoryHistoryAsync()
     {
         return await _context.InventoryRecords
             .Include(x => x.InventoryDetails)
+                .ThenInclude(d => d.StationeryItem)
             .AsNoTracking()
+            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
+    }
+
+    // =========================
+    // GET ALL
+    // =========================
+    public async Task<List<InventoryRecord>> GetAllAsync()
+    {
+        return await _context.InventoryRecords
+            .Include(x => x.InventoryDetails)
+                .ThenInclude(d => d.StationeryItem)
+            .AsNoTracking()
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();
+    }
+
+    // =========================
+    // GET DETAIL
+    // =========================
+    public async Task<InventoryRecord?> GetByIdAsync(int id)
+    {
+        return await _context.InventoryRecords
+            .Include(x => x.InventoryDetails)
+                .ThenInclude(d => d.StationeryItem)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

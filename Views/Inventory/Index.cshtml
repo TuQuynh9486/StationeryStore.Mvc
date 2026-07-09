@@ -1,0 +1,97 @@
+@model IEnumerable<InventoryRecord>
+
+@{
+    ViewData["Title"] = "Inventory Transactions";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1 class="page-title">
+            Inventory Transactions
+        </h1>
+
+        <p class="page-description">
+            Manage inventory import history for stationery products.
+        </p>
+
+    </div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div>
+
+            <a asp-action="Create"
+               class="btn">
+                + New Inventory Transaction
+            </a>
+
+        </div>
+    }
+
+</div>
+
+@if (!Model.Any())
+{
+    <div class="info-box">
+
+        <strong>No inventory transactions found.</strong>
+
+    </div>
+}
+else
+{
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Created At</th>
+
+                <th>Total Items</th>
+
+                <th></th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @item.Id
+                </td>
+
+                <td>
+                    @item.CreatedAt.ToLocalTime()
+                </td>
+
+                <td>
+                    @item.InventoryDetails.Count
+                </td>
+
+                <td>
+
+                    <a asp-action="Detail"
+                       asp-route-id="@item.Id"
+                       class="btn btn-light">
+                        Detail
+                    </a>
+
+                </td>
+
+            </tr>
+        }
+
+        </tbody>
+
+    </table>
+}

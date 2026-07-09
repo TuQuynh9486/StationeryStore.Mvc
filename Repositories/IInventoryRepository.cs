@@ -9,6 +9,7 @@ public interface IInventoryRepository
     Task<InventoryRecord?> GetByIdAsync(int id);
 
     Task AddAsync(InventoryRecord record);
+    
 
     Task SaveChangesAsync();
 }
