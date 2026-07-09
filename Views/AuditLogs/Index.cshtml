@@ -1,0 +1,62 @@
+@model List<StationeryStore.Mvc.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "Audit Logs";
+}
+
+<h2>Audit Logs</h2>
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+
+        <tr>
+
+            <th>Time</th>
+
+            <th>User</th>
+
+            <th>Action</th>
+
+            <th>Entity</th>
+
+            <th>Entity Id</th>
+
+            <th>Result</th>
+
+            <th>Description</th>
+
+            <th>TraceId</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+@foreach(var item in Model)
+{
+        <tr>
+
+            <td>@item.CreatedAt</td>
+
+            <td>@item.UserName</td>
+
+            <td>@item.Action</td>
+
+            <td>@item.EntityName</td>
+
+            <td>@item.EntityId</td>
+
+            <td>@item.Result</td>
+
+            <td>@item.Description</td>
+
+            <td>@item.TraceId</td>
+
+        </tr>
+}
+
+    </tbody>
+
+</table>
