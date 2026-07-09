@@ -27,7 +27,6 @@ public class StationeryController : Controller
         _supplierService = supplierService;
     }
 
-    [Authorize(Policy = "CanViewProduct")]
     public async Task<IActionResult> Index()
     {
         var items =
@@ -97,10 +96,11 @@ public class StationeryController : Controller
         return View(model);
     }
     [HttpGet]
+    [Authorize(Policy = "CanViewProduct")]
     public async Task<IActionResult> Dashboard()
     {
         var model =
-            await _stationeryService.GetStatsAsync();
+            await _stationeryService.GetDashboardAsync();
 
         return View(model);
     }

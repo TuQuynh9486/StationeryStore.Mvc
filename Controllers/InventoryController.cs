@@ -38,4 +38,20 @@ public class InventoryController : Controller
 
         return RedirectToAction("Index", "Stationery");
     }
+
+    public async Task<IActionResult> Index()
+    {
+        var records = await _inventoryService.GetAllAsync();
+        return View(records);
+    }
+
+    public async Task<IActionResult> Detail(int id)
+    {
+        var record = await _inventoryService.GetByIdAsync(id);
+
+        if (record == null)
+            return NotFound();
+
+        return View(record);
+    }
 }
