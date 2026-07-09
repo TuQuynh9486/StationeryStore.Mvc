@@ -9,12 +9,6 @@
         <h2 class="page-title">
             Search Stationery
         </h2>
-
-        <p class="page-description">
-            Form GET dùng Query String để tìm kiếm
-            sản phẩm văn phòng phẩm theo từ khóa,
-            danh mục và khoảng giá.
-        </p>
     </div>
 
     <a class="btn btn-light" asp-controller="Stationery" asp-action="Index">
@@ -86,7 +80,7 @@
 
         <p>
             Category Id:
-            <strong>@Model.CategoryId?.ToString() ?? "All")</strong>
+            <strong>@Model.CategoryId?.ToString() </strong>
         </p>
 
         <p>

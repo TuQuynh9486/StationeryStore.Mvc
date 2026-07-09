@@ -131,6 +131,7 @@ public class StationeryRepository : IStationeryRepository
         {
             item.IsDeleted = true;
             item.DeletedAt = DateTime.UtcNow;
+            item.UpdatedAt = DateTime.UtcNow;
         }
     }
 

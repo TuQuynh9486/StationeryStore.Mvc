@@ -1,53 +1,164 @@
-@model StationeryStatsViewModel
+@model DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<h2 class="page-title">
-    Dashboard
-</h2>
+<div class="dashboard-header">
 
-<div class="stats-grid">
+    <h1 class="dashboard-title">
+        System Dashboard
+    </h1>
 
-    <div class="stats-card">
-        <h5>Tổng số sản phẩm</h5>
-        <h2>@Model.TotalProducts</h2>
+    <p class="dashboard-subtitle">
+        Tổng quan hệ thống quản lý Stationery Store.
+    </p>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="dashboard-card bg-primary">
+
+        <h4>Products</h4>
+
+        <div class="dashboard-number">
+            @Model.TotalProducts
+        </div>
+
     </div>
 
-    <div class="stats-card">
-        <h5>Đang hoạt động</h5>
-        <h2>@Model.ActiveProducts</h2>
+    <div class="dashboard-card bg-success">
+
+        <h4>Inventory</h4>
+
+        <div class="dashboard-number">
+            @Model.TotalInventoryTransactions
+        </div>
+
     </div>
 
-    <div class="stats-card">
-        <h5>Đã xóa</h5>
-        <h2>@Model.DeletedProducts</h2>
+    <div class="dashboard-card bg-warning">
+
+        <h4>Audit Logs</h4>
+
+        <div class="dashboard-number">
+            @Model.TotalAuditLogs
+        </div>
+
     </div>
 
-    <div class="stats-card">
-        <h5>Tạo hôm nay</h5>
-        <h2>@Model.CreatedToday</h2>
+    <div class="dashboard-card bg-info">
+
+        <h4>Categories</h4>
+
+        <div class="dashboard-number">
+            @Model.TotalCategories
+        </div>
+
     </div>
 
-    <div class="stats-card">
-        <h5>Cập nhật hôm nay</h5>
-        <h2>@Model.UpdatedToday</h2>
+    <div class="dashboard-card bg-secondary">
+
+        <h4>Suppliers</h4>
+
+        <div class="dashboard-number">
+            @Model.TotalSuppliers
+        </div>
+
     </div>
 
-    <div class="stats-card">
-        <h5>Sắp hết</h5>
-        <h2>@Model.LowStockCount</h2>
+</div>
+
+<div class="dashboard-section">
+
+    <div class="dashboard-box">
+
+        <h3>
+            Security Controls
+        </h3>
+
+        <table class="table table-borderless">
+
+            <tbody>
+
+                <tr>
+                    <td>Identity</td>
+                    <td>
+                        @(Model.IdentityEnabled ? "✔ Enabled" : "✘ Disabled")
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Authorization</td>
+                    <td>
+                        @(Model.AuthorizationEnabled ? "✔ Enabled" : "✘ Disabled")
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Anti Forgery</td>
+                    <td>
+                        @(Model.AntiForgeryEnabled ? "✔ Enabled" : "✘ Disabled")
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Health Check</td>
+                    <td>
+                        @(Model.HealthCheckEnabled ? "✔ Enabled" : "✘ Disabled")
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 
-    <div class="stats-card">
-        <h5>Hết hàng</h5>
-        <h2>@Model.OutOfStockCount</h2>
-    </div>
+    <div class="dashboard-box">
 
-    <div class="stats-card">
-        <h5>Tổng giá trị tồn kho</h5>
-        <h2>@Model.TotalInventoryValue.ToString("N0") VNĐ</h2>
+        <h3>
+            Quick Access
+        </h3>
+
+        <div class="quick-buttons">
+
+            <a asp-controller="Stationery"
+               asp-action="Index"
+               class="btn btn-primary">
+                Products
+            </a>
+
+            <a asp-controller="Inventory"
+               asp-action="Index"
+               class="btn btn-success">
+                Inventory
+            </a>
+
+            <a asp-controller="Categories"
+               asp-action="Index"
+               class="btn btn-info">
+                Categories
+            </a>
+
+            <a asp-controller="Suppliers"
+               asp-action="Index"
+               class="btn btn-warning">
+                Suppliers
+            </a>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="AuditLogs"
+                   asp-action="Index"
+                   class="btn btn-danger">
+                    Audit Logs
+                </a>
+            }
+
+        </div>
+
     </div>
 
 </div>
