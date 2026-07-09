@@ -15,17 +15,20 @@ public class StationeryService : IStationeryService
     private readonly StoreSettings _settings;
     private readonly StationeryDbContext _context;
     private readonly ILogger<StationeryService> _logger;
+    private readonly IAuditLogService _auditService;
 
     public StationeryService(
         IStationeryRepository stationeryRepository,
         IOptions<StoreSettings> options,
         StationeryDbContext context,
-        ILogger<StationeryService> logger)
+        ILogger<StationeryService> logger,
+        IAuditLogService auditService)
     {
         _stationeryRepository = stationeryRepository;
         _settings = options.Value;
         _context = context;
         _logger = logger;
+        _auditService = auditService;
     }
 
     // =========================
@@ -110,7 +113,7 @@ public class StationeryService : IStationeryService
             if (exists)
             {
                 _logger.LogWarning(
-                    "Create failed. Duplicate code {Code}",
+                    "Create failed. Duplicate code {Code}.",
                     model.Code);
 
                 throw new Exception(
@@ -139,9 +142,16 @@ public class StationeryService : IStationeryService
             await transaction.CommitAsync();
 
             _logger.LogInformation(
-                "Created stationery {Code} - {Name}",
+                "Created stationery {Code} - {Name}.",
                 entity.Code,
                 entity.Name);
+
+            await _auditService.LogAsync(
+                "Create",
+                "StationeryItem",
+                entity.Id,
+                "Success",
+                $"Created {entity.Code}");
         }
         catch (Exception ex)
         {
@@ -149,7 +159,7 @@ public class StationeryService : IStationeryService
 
             _logger.LogError(
                 ex,
-                "Create stationery failed. Code={Code}",
+                "Create stationery failed. Code={Code}.",
                 model.Code);
 
             throw;
@@ -197,45 +207,34 @@ public class StationeryService : IStationeryService
     }
 
     // =========================
-    // STATS
+    // DASHBOARD
     // =========================
-    public async Task<StationeryStatsViewModel> GetStatsAsync()
+    public async Task<DashboardViewModel> GetDashboardAsync()
     {
-        var items = await _stationeryRepository.GetAllIncludingDeletedAsync();
-
-        return new StationeryStatsViewModel
+        return new DashboardViewModel
         {
-            TotalProducts = items.Count,
+            TotalProducts =
+                await _context.StationeryItems.CountAsync(),
 
-            ActiveProducts =
-                items.Count(x => !x.IsDeleted),
+            TotalInventoryTransactions =
+                await _context.InventoryRecords.CountAsync(),
 
-            DeletedProducts =
-                items.Count(x => x.IsDeleted),
+            TotalAuditLogs =
+                await _context.AuditLogs.CountAsync(),
 
-            CreatedToday =
-                items.Count(x =>
-                    x.CreatedAt.Date == DateTime.UtcNow.Date),
+            TotalCategories =
+                await _context.Categories.CountAsync(),
 
-            UpdatedToday =
-                items.Count(x =>
-                    x.UpdatedAt?.Date == DateTime.UtcNow.Date),
+            TotalSuppliers =
+                await _context.Suppliers.CountAsync(),
 
-            TotalStockQuantity =
-                items.Sum(x => x.StockQuantity),
+            IdentityEnabled = true,
 
-            TotalInventoryValue =
-                items.Sum(x => x.StockQuantity * x.Price),
+            AuthorizationEnabled = true,
 
-            OutOfStockCount =
-                items.Count(x => x.StockQuantity == 0),
+            AntiForgeryEnabled = true,
 
-            LowStockCount =
-                items.Count(x =>
-                    x.StockQuantity <= x.MinStock &&
-                    x.StockQuantity > 0),
-
-            LowStockThreshold = 10
+            HealthCheckEnabled = true
         };
     }
     // =========================
@@ -263,6 +262,7 @@ public class StationeryService : IStationeryService
 
             RowVersion = item.RowVersion ?? Array.Empty<byte>()
         };
+
     }
     // =========================
     // UPDATE
@@ -335,6 +335,12 @@ public class StationeryService : IStationeryService
             throw new Exception(
                 "Sản phẩm đã được người khác chỉnh sửa.");
         }
+        await _auditService.LogAsync(
+            "Edit",
+            "StationeryItem",
+            item.Id,
+            "Success",
+            $"Updated {item.Code}");
     }
 
     // =========================
@@ -347,7 +353,13 @@ public class StationeryService : IStationeryService
                 .GetByIdAsync(id);
 
         if (item == null)
+        {
+            _logger.LogWarning(
+                "Delete failed. Item {Id} not found.",
+                id);
+
             return;
+        }
 
         item.IsDeleted = true;
 
@@ -362,6 +374,14 @@ public class StationeryService : IStationeryService
         _logger.LogWarning(
             "Soft deleted stationery {Code}",
             item.Code);
+
+        await _auditService.LogAsync(
+            "SoftDelete",
+            "StationeryItem",
+            item.Id,
+            "Success",
+            $"Deleted {item.Code}");
+
     }
 
     // =========================
@@ -386,7 +406,7 @@ public class StationeryService : IStationeryService
                 .SaveChangesAsync();
 
             _logger.LogInformation(
-                "Restored stationery {Id}",
+                "Restored stationery {Id}.",
                 id);
         }
         catch (DbUpdateConcurrencyException)
@@ -394,6 +414,13 @@ public class StationeryService : IStationeryService
             throw new Exception(
                 "Dữ liệu đã bị thay đổi bởi người khác.");
         }
+
+        await _auditService.LogAsync(
+            "Restore",
+            "StationeryItem",
+            id,
+            "Success",
+            "Restore from trash");
     }
     // =========================
     // ADJUST STOCK
@@ -465,6 +492,13 @@ public class StationeryService : IStationeryService
             throw new Exception(
                 "Dữ liệu đã bị thay đổi bởi người khác.");
         }
+
+        await _auditService.LogAsync(
+            "AdjustStock",
+            "StationeryItem",
+            item.Id,
+            "Success",
+            $"Change quantity = {model.ChangeQuantity}");
     }
 
     // =========================
@@ -490,5 +524,37 @@ public class StationeryService : IStationeryService
                 ImageUrl = item.ImageUrl
             })
             .ToList();
+    }
+    // =========================
+    // UPDATE IMAGE 
+    // =========================
+    public async Task UpdateImageAsync(
+    int id,
+    string imageUrl)
+    {
+        var item =
+            await _stationeryRepository.GetByIdAsync(id);
+
+        if (item == null)
+            return;
+
+        item.ImageUrl = imageUrl;
+
+        item.LastUpdatedAt = DateTime.UtcNow;
+
+        await _stationeryRepository.UpdateAsync(item);
+
+        await _stationeryRepository.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Upload image for {Code}",
+            item.Code);
+
+        await _auditService.LogAsync(
+            action: "UploadImage",
+            entity: "StationeryItem",
+            entityId: item.Id,
+            result: "Success",
+            detail: $"Image uploaded for {item.Code}");
     }
 }
