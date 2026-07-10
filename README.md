@@ -345,14 +345,6 @@ https://localhost:5151
 
 ---
 
-# Git Branches
-
-- main
-- lab05
-- final
-
----
-
 # Notes
 
 - Chỉ **Admin** được phép tạo, chỉnh sửa, xóa, khôi phục sản phẩm và upload hình ảnh.
