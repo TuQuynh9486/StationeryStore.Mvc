@@ -212,7 +212,7 @@ Nếu không tìm thấy dữ liệu sẽ trả về ProblemDetails gồm:
 ## Clone Project
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/TuQuynh9486/StationeryStore.Mvc/tree/final-lab06>
 ```
 
 ---
