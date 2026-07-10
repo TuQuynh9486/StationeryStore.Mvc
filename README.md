@@ -2,37 +2,35 @@
 
 ## Student Information
 
-- Student: Trần Thị Tú Quỳnh
-- Course: ASP.NET Core MVC
-- Project: Stationery Store MVC
-- Framework: .NET 8
-- Database: SQL Server
+- **Student:** Trần Thị Tú Quỳnh
+- **Course:** ASP.NET Core MVC
+- **Project:** Stationery Store MVC
+- **Framework:** .NET 8
+- **Database:** SQL Server
 
 ---
 
 # Project Overview
 
-Stationery Store MVC là hệ thống quản lý văn phòng phẩm sử dụng ASP.NET Core MVC.
+Stationery Store MVC là hệ thống quản lý kho văn phòng phẩm được xây dựng bằng ASP.NET Core MVC.
 
-Project được phát triển từ Lab01 → Lab06 và bao gồm:
+Ứng dụng hỗ trợ quản lý sản phẩm, danh mục, nhà cung cấp và giao dịch nhập kho. Đồng thời tích hợp ASP.NET Core Identity để xác thực người dùng, phân quyền theo vai trò và áp dụng các kỹ thuật bảo mật trong phát triển ứng dụng web.
+
+Project được phát triển xuyên suốt từ Lab01 đến Lab06 với các kiến thức:
 
 - ASP.NET Core MVC
 - Entity Framework Core
 - SQL Server
 - ASP.NET Core Identity
-- Authentication
-- Authorization
-- Policy-Based Authorization
 - Repository Pattern
 - Service Pattern
-- Soft Delete
-- Restore
-- RowVersion Concurrency
+- Dependency Injection
+- Authentication & Authorization
 - Health Check
 - Structured Logging
 - Audit Log
-- Secure Image Upload
 - ProblemDetails API
+- Secure File Upload
 
 ---
 
@@ -41,14 +39,28 @@ Project được phát triển từ Lab01 → Lab06 và bao gồm:
 - ASP.NET Core 8
 - Entity Framework Core
 - SQL Server
-- Identity
+- ASP.NET Core Identity
 - Razor View
 - Bootstrap
 - Dependency Injection
 
 ---
 
-# Features
+# Main Features
+
+## Dashboard
+
+Dashboard hiển thị tổng quan hệ thống:
+
+- Tổng số sản phẩm
+- Tổng số danh mục
+- Tổng số nhà cung cấp
+- Tổng số giao dịch kho
+- Tổng số Audit Logs
+- Security Controls
+- Quick Access
+
+---
 
 ## Authentication
 
@@ -60,13 +72,13 @@ Project được phát triển từ Lab01 → Lab06 và bao gồm:
 
 ## Authorization
 
-Roles
+### Roles
 
 - Admin
 - Staff
 - User
 
-Policies
+### Policies
 
 - CanViewProduct
 - CanManageProduct
@@ -79,86 +91,157 @@ Policies
 
 - Product List
 - Product Detail
-- Search
-- Create
-- Edit
-- Delete
+- Search Product
+- Create Product
+- Edit Product
 - Soft Delete
 - Trash
 - Restore
+- RowVersion Concurrency
 
 ---
 
-## Inventory
+## Category Management
 
-- Adjust Stock
-- Inventory Transaction
+- Category List
+- Category Detail
 
 ---
 
-## Upload
+## Supplier Management
+
+- Supplier List
+- Supplier Detail
+
+---
+
+## Inventory Management
+
+Quản lý các giao dịch nhập kho.
+
+Bao gồm:
+
+- Create Inventory Transaction
+- Inventory History
+- Inventory Detail
+
+Mỗi giao dịch sẽ:
+
+- Tạo Inventory Record
+- Tạo Inventory Detail
+- Cập nhật số lượng tồn kho
+- Sử dụng Transaction để đảm bảo tính toàn vẹn dữ liệu
+
+---
+
+## Upload Product Image
 
 Admin có thể upload hình ảnh sản phẩm.
 
-Các giới hạn:
+Điều kiện:
 
-- jpg
-- jpeg
-- png
-- webp
+- Allowed extensions:
+  - jpg
+  - jpeg
+  - png
+  - webp
 
-Maximum size
-
-- 2MB
+- Maximum size:
+  - 2 MB
 
 ---
 
 ## Audit Log
 
-Hệ thống ghi lại các hành động:
+Hệ thống lưu lại các hành động quan trọng:
 
+- Register
 - Login
 - Logout
-- Register
-- Create
-- Edit
-- Delete
+- Create Product
+- Edit Product
+- Soft Delete
 - Restore
 - Upload Image
+
+Thông tin được lưu:
+
+- User
+- Action
+- Entity
+- EntityId
+- Result
+- Description
+- TraceId
+- RequestPath
+- IP Address
+- Created Time
 
 ---
 
 ## Health Check
 
-- /health/live
+Application hỗ trợ:
 
-- /health/ready
+- `/health/live`
+- `/health/ready`
 
 ---
 
 ## API
 
-Ví dụ
+Ví dụ:
 
-GET
+```
+GET /api/stationery/{id}
+```
 
-/api/stationery/1
+Nếu không tìm thấy dữ liệu sẽ trả về ProblemDetails gồm:
 
-Nếu không tồn tại sẽ trả về ProblemDetails.
+- Title
+- Status
+- Detail
+- Instance
+- TraceId
+- ErrorCode
 
 ---
 
-# Database
+# Installation
 
-## Update Database
+## Clone Project
+
+```bash
+git clone <repository-url>
+```
+
+---
+
+## Restore Packages
+
+```bash
+dotnet restore
+```
+
+---
+
+## Build Project
+
+```bash
+dotnet build
+```
+
+---
+
+## Database Migration
+
+Nếu chưa có database:
 
 ```bash
 dotnet ef database update
 ```
 
----
-
-## Migration
+Hoặc tạo migration mới:
 
 ```bash
 dotnet ef migrations add FinalLab06
@@ -168,128 +251,13 @@ dotnet ef database update
 
 ---
 
-# Demo Accounts
-
-## Admin
-
-Email
-
-admin@gmail.com
-
-Password
-
-Admin@123
-
----
-
-## Staff
-
-Email
-
-staff@gmail.com
-
-Password
-
-Staff@123
-
----
-
-## User
-
-Email
-
-user@gmail.com
-
-Password
-
-User@123
-
----
-
-# Authorization Test
-
-| Account | View | Search | Create | Edit | Delete | Restore | Upload | Audit |
-|---------|------|--------|--------|------|--------|----------|---------|-------|
-| Admin | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Staff | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| User | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Anonymous | Redirect Login | Redirect Login | Redirect Login | Redirect Login | Redirect Login | Redirect Login | Redirect Login | Redirect Login |
-
----
-
-# Security
-
-Implemented
-
-- AntiForgeryToken
-- Razor Encoding
-- SQL Injection Protection
-- Cookie Authentication
-- Role Authorization
-- Policy Authorization
-- Safe Upload
-- RowVersion
-- Soft Delete
-
----
-
-# Project Structure
-
-Controllers
-
-- HomeController
-- StationeryController
-- CategoriesController
-- SuppliersController
-- InventoryController
-- AccountController
-- AuditLogsController
-- StationeryApiController
-
-Services
-
-- StationeryService
-- InventoryService
-- CategoryService
-- SupplierService
-- AuditLogService
-
-Repositories
-
-- StationeryRepository
-- InventoryRepository
-- CategoryRepository
-- SupplierRepository
-
----
-
-# Running Project
-
-Clone project
-
-```bash
-git clone <repository>
-```
-
-Restore packages
-
-```bash
-dotnet restore
-```
-
-Run migration
-
-```bash
-dotnet ef database update
-```
-
-Run
+## Run Application
 
 ```bash
 dotnet run
 ```
 
-Open
+Mặc định ứng dụng chạy tại:
 
 ```
 https://localhost:5151
@@ -297,72 +265,97 @@ https://localhost:5151
 
 ---
 
-# Git Branch
+# Demo Accounts
 
-main
-
-lab05
-
-final
-
----
-
-# Screenshots
-
-- Login
-
-- Register
-  
-- Product List
-  
-- Search
-  
-- Create
-  
-- Edit
-  
-- Trash
-  
-- Restore
-
-- Upload Image
-
-- Health Check
-
-- Audit Log
-
-- API ProblemDetails
+| Role | Email | Password |
+|------|------|------|
+| Admin | admin@gmail.com | Admin@123 |
+| Staff | staff@gmail.com | Staff@123 |
+| User | user@gmail.com | User@123 |
 
 ---
 
-# Test Checklist
+# Authorization
 
-- Identity
+| Feature | Admin | Staff | User | Anonymous |
+|---------|------|------|------|------|
+| Dashboard | ✅ | ✅ | ❌ | Redirect Login |
+| Product List | ✅ | ✅ | ❌ | Redirect Login |
+| Product Detail | ✅ | ✅ | ❌ | Redirect Login |
+| Search Product | ✅ | ✅ | ❌ | Redirect Login |
+| Create Product | ✅ | ❌ | ❌ | Redirect Login |
+| Edit Product | ✅ | ❌ | ❌ | Redirect Login |
+| Delete Product | ✅ | ❌ | ❌ | Redirect Login |
+| Restore Product | ✅ | ❌ | ❌ | Redirect Login |
+| Upload Image | ✅ | ❌ | ❌ | Redirect Login |
+| Inventory Transaction | ✅ | ✅ | ❌ | Redirect Login |
+| Audit Log | ✅ | ❌ | ❌ | Redirect Login |
 
-- Authorization
+---
 
-- Policy
+# Security Features
 
-- CRUD
+Đã triển khai:
 
-- Validation
-
-- RowVersion
-
+- ASP.NET Core Identity
+- Cookie Authentication
+- Role-Based Authorization
+- Policy-Based Authorization
+- ValidateAntiForgeryToken
+- Razor Encoding
+- SQL Injection Protection
+- Secure File Upload
+- RowVersion Concurrency
 - Soft Delete
-
-- Restore
-
-- Upload Image
-
 - Audit Log
-
+- Structured Logging
 - Health Check
+- ProblemDetails API
 
-- ProblemDetails
+---
 
-- Logging
+# Project Structure
 
-- README
+## Controllers
 
-All requirements of Lab06 Final have been implemented.
+- HomeController
+- AccountController
+- StationeryController
+- CategoriesController
+- SuppliersController
+- InventoryController
+- AuditLogsController
+- StationeryApiController
+
+## Services
+
+- StationeryService
+- CategoryService
+- SupplierService
+- InventoryService
+- AuditLogService
+
+## Repositories
+
+- StationeryRepository
+- CategoryRepository
+- SupplierRepository
+- InventoryRepository
+- AuditLogRepository
+
+---
+
+# Git Branches
+
+- main
+- lab05
+- final
+
+---
+
+# Notes
+
+- Chỉ **Admin** được phép tạo, chỉnh sửa, xóa, khôi phục sản phẩm và upload hình ảnh.
+- **Staff** chỉ có quyền xem dữ liệu và thực hiện giao dịch nhập kho.
+- **Anonymous** sẽ được chuyển về trang Login khi truy cập các chức năng yêu cầu xác thực.
+- Ứng dụng sử dụng Transaction trong nghiệp vụ nhập kho để đảm bảo dữ liệu luôn nhất quán khi có lỗi xảy ra.
